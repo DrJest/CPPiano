@@ -30,6 +30,7 @@
     
     private:
       QString name;
+      QWidget* _parent;
       int _left, _top, _width, _height;
   };
 

@@ -55,14 +55,10 @@ QWidget* mainWindow::getMainWidget()
 
 void mainWindow::keyPressEvent(QKeyEvent *event)
 {
-  QVector<int> code{ 65, 87, 83, 68, 82, 70, 84, 71, 72, 85, 74, 73, 75, 79, 76, 80};
-  
-  QTextStream out(stdout);
-  out << event->key() << "\n";
+  ((keyBoard*)(this->getMainWidget()))->getNote(event->key());
 }
  
 void mainWindow::keyReleaseEvent(QKeyEvent *event)
 {
-  QTextStream out(stdout);
-  out << event->key() << "\n";
+  return;
 }

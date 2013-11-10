@@ -20,7 +20,7 @@
       keyBoard(QWidget* = 0);
       Key* addKey(QString);
       void playNote(Key*);
-      void playNote(int);
+      void getNote(int);
       
       keyBoard* sort();
       keyBoard* draw();

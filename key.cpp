@@ -1,4 +1,5 @@
 #include "key.hpp"
+#include "keyboard.hpp"
 #include <QMap>
 #include <QRegExp>
 
@@ -62,8 +63,7 @@ QString Key::getN()
 void Key::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton) {
-    QTextStream out(stdout);
-    out << this->name << "\n";
+    ((keyBoard*)(this->_parent))->playNote(this);
   } else {
     QPushButton::mousePressEvent(event);
   }

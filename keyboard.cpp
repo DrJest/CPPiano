@@ -1,7 +1,8 @@
 #include "keyboard.hpp"
 #include "key.hpp"
 #include <QRegExp>
-
+#include <QAudio>
+#include <QAudioOutput>
 
 keyBoard::keyBoard(QWidget *parent)
   : QWidget(parent)
@@ -108,5 +109,47 @@ int keyBoard::getHeight()
 
 void keyBoard::playNote(Key* note)
 {
-  
+    QTextStream out(stdout);
+    out << note->getN() << "\n";
+    QFile inputFile;     // class member.
+    QAudioOutput* audio; // class member.
+    inputFile.setFileName("/tmp/test.raw");
+    inputFile.open(QIODevice::ReadOnly);
+
+    QAudioFormat format;
+    // Set up the format, eg.
+    format.setFrequency(8000);
+    format.setChannels(1);
+    format.setSampleSize(8);
+    format.setCodec("audio/pcm");
+    format.setByteOrder(QAudioFormat::LittleEndian);
+    format.setSampleType(QAudioFormat::UnSignedInt);
+    
+    QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
+    if (!info.isFormatSupported(format)) {
+        out<<"raw audio format not supported by backend, cannot play audio.\n";
+        return;
+    }
+
+    audio = new QAudioOutput(format, this);
+    connect(audio,SIGNAL(stateChanged(QAudio::State)),SLOT(finishedPlaying(QAudio::State)));
+    audio->start(&inputFile);
+}
+
+void keyBoard::getNote(int keyCode)
+{
+  QVector<int> code{ 65, 87, 83, 68, 82, 70, 84, 71, 72, 85, 74, 73, 75, 79, 76, 80};
+  if(code.indexOf(keyCode)==-1) return;
+  QVector<QString> notes{"a4","a4#","b4","c5","c5#","d5","d5#","e5","f5","f5#","g5","g5#","a5","a5#","b5","c6"};
+  int i = code.indexOf(keyCode);
+  QString n = notes.at(i);
+  QString s = n.right(1);
+  QVector<Key*> a;
+  if(s=="#")
+    a = this->aKeys;
+  else
+    a = this->cKeys;
+    
+  for(int i = 0; i < a.size(); ++i)
+    if(a.at(i)->getN() == n) { this->playNote(a.at(i)); return; }
 }

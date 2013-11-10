@@ -9,6 +9,7 @@ INCLUDEPATH += .
 #THIS IS NECESSARY TO ASSURE CORRECT PARSING OF BRACKET INITIALIZED QVECTORS
 # QVector x = { value1, value2, ... } 
 QMAKE_CXXFLAGS += -std=c++11 
+QT += multimedia
 
 # Input
 HEADERS += key.hpp keyboard.hpp mainWindow.hpp
