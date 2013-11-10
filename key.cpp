@@ -1,11 +1,27 @@
 #include "key.hpp"
 #include <QMap>
+#include <QRegExp>
 
 Key::Key(QString name, QWidget *parent)
   : QPushButton(name, parent)
 {
   this->name = name;
   this->setNote(name);
+  this->setGeometry(0,0,0,0);
+}
+
+int Key::left()
+{
+  return this->_left;
+}
+
+void Key::setGeometry(int l, int t, int w, int h)
+{
+  this->_left=l;
+  this->_top =t;
+  this->_width=w;
+  this->_height=h;
+  QPushButton::setGeometry(l,t,w,h);
 }
 
 void Key::setNote(QString name)

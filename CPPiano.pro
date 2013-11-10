@@ -11,5 +11,5 @@ INCLUDEPATH += .
 QMAKE_CXXFLAGS += -std=c++11 
 
 # Input
-HEADERS += key.hpp keyboard.hpp mainWindow.hpp note.hpp
-SOURCES += key.cpp keyboard.cpp main.cpp mainWindow.cpp note.cpp
+HEADERS += key.hpp keyboard.hpp mainWindow.hpp
+SOURCES += key.cpp keyboard.cpp main.cpp mainWindow.cpp

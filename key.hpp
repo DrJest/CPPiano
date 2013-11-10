@@ -19,7 +19,10 @@
     
     public:
       Key(QString, QWidget*);
+      ~Key(){};
+      int left();
       void setNote(QString);
+      void setGeometry(int,int,int,int);
       QString getN();
 
     protected:
@@ -27,6 +30,7 @@
     
     private:
       QString name;
+      int _left, _top, _width, _height;
   };
 
 #endif
