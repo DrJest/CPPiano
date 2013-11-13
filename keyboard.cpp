@@ -6,6 +6,7 @@
 keyBoard::keyBoard(QWidget *parent)
   : QWidget(parent)
 {
+  this->_aOutput = new AudioOutputStreamer();
 }
 
 keyBoard* keyBoard::setCKeyHeight(int h)
