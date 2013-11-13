@@ -6,9 +6,43 @@
 Key::Key(QString name, QWidget *parent)
   : QPushButton(name, parent)
 {
-  this->name = name;
-  this->setNote(name);
+  // nt must be formatted as: [a-g][1-7][#]{0,1}
+  // so i trim the first 3 letters and use a regex
+  name = name.left(3);
+  if(!name.contains(QRegExp("[a-g][1-7][#]{0,1}")) ) 
+  {
+    QTextStream out(stdout);
+    out << "Error: " << name << "is not a valid keynote\n";
+    return;
+  }
+  
+  this->_name = name;
   this->setGeometry(0,0,0,0);
+  
+  if(name.right(1)=="#") 
+  {
+    this->setStyleSheet("background-color: black;color: white;");
+    this->_sharp=true;
+  } else {
+    this->setStyleSheet("background-color: white;color: black;");
+  }
+  this->_valid = true;
+}
+
+Key* Key::setFrequency(double f)
+{
+  this->_frequency = f;
+  return this;
+}
+
+bool Key::valid()
+{
+  return this->_valid;
+}
+
+bool Key::sharp()
+{
+  return this->_sharp;
 }
 
 int Key::left()
@@ -16,34 +50,37 @@ int Key::left()
   return this->_left;
 }
 
-void Key::setGeometry(int l, int t, int w, int h)
+Key* Key::setGeometry(int l, int t, int w, int h)
 {
   this->_left=l;
   this->_top =t;
   this->_width=w;
   this->_height=h;
   QPushButton::setGeometry(l,t,w,h);
+  return this;
 }
 
-void Key::setNote(QString name)
+/*
+Key* Key::assignKey(int keyCode)
 {
-  QMap<QString, double> freqs;
-   freqs["a"] = 440.00; //LA4
-   freqs["w"] = 466.16;
-   freqs["s"] = 493.88;
-   freqs["d"] = 523.25;
-   freqs["r"] = 554.37;
-   freqs["f"] = 587.33;
-   freqs["t"] = 622.25;
-   freqs["g"] = 659.26;
-   freqs["h"] = 698.46;
-   freqs["u"] = 739.99;
-   freqs["j"] = 783.99;
-   freqs["i"] = 830.61;
-   freqs["k"] = 880.00; //LA5
-   freqs["o"] = 932.33;
-   freqs["l"] = 987.77;
-   freqs["p"] = 1046.5;
+  this->_keyCode = keyCode;
+  QMap<QString, QString> layout;
+   layout["a"] = "a"; //LA4
+   layout["w"] = "a#";
+   layout["s"] = "b";
+   layout["d"] = "c";
+   layout["r"] = "c#";
+   layout["f"] = "d";
+   layout["t"] = "d#";
+   layout["g"] = "e";
+   layout["h"] = "f";
+   layout["u"] = "f#";
+   layout["j"] = "g";
+   layout["i"] = "g#";
+   layout["k"] = "a";
+   layout["o"] = "a#";
+   layout["l"] = "b";
+   layout["p"] = "c";
   
   //double f;
   //QString l;
@@ -53,11 +90,18 @@ void Key::setNote(QString name)
   //so I use another vector to pass from index to key before access QMap
   QVector<QString> keys{"a","w","s","d","r","f","t","g","h","u","j","i","k","o","l","p"};
   //n.set(
+  return this;
+}
+*/
+
+QString Key::name()
+{
+  return this->_name;
 }
 
-QString Key::getN()
+double Key::frequency()
 {
-  return this->name;
+  return this->_frequency;
 }
 
 void Key::mousePressEvent(QMouseEvent *event)

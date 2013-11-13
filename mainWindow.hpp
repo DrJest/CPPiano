@@ -12,7 +12,6 @@
   #include <QToolBar>
   #include <QMenu>
   #include <QMenuBar>
-  #include <QKeyEvent>
   #include <QMenu>
   #include <QTextStream>
   #include <QMap>
@@ -69,13 +68,13 @@ class mainWindowMenu
       mainWindow* defaultMenus();
       mainWindow* draw();
       
-    protected:
-      void keyPressEvent(QKeyEvent *);
-      void keyReleaseEvent(QKeyEvent *);
-    
+      int getToolbars();
+      int getMenus();
+
     private:
       QWidget* mainWidget;
       QVector<mainWindowMenu> menus;
+      QVector<mainWindowMenu> tbars;
   };
   
 #endif

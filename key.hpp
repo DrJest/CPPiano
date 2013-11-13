@@ -3,6 +3,9 @@
  * 
  * Contains and implements keyboard keys
  * 
+ * for error Gtk-CRITICAL **: IA__gtk_widget_get_direction: assertion `GTK_IS_WIDGET (widget)' failed
+ * https://bugzilla.redhat.com/show_bug.cgi?id=924683
+ * 
  * **/ 
 
 #ifndef KEY_H
@@ -21,17 +24,24 @@
       Key(QString, QWidget*);
       ~Key(){};
       int left();
-      void setNote(QString);
-      void setGeometry(int,int,int,int);
-      QString getN();
-
+      Key* setGeometry(int,int,int,int);
+      Key* setFrequency(double);
+      
+      QString name();
+      double frequency();
+      bool sharp();
+      bool valid();
+      
     protected:
       void mousePressEvent(QMouseEvent*);
     
     private:
-      QString name;
+      QString _name;
       QWidget* _parent;
       int _left, _top, _width, _height;
+      double _frequency;
+      bool _sharp = false;
+      bool _valid = false;
   };
 
 #endif

@@ -1,0 +1,25 @@
+
+    /*
+    QFile inputFile;     // class member.
+    QAudioOutput* audio; // class member.
+    inputFile.setFileName("/tmp/test.raw");
+    inputFile.open(QIODevice::ReadOnly);
+
+    QAudioFormat format;
+    // Set up the format, eg.
+    format.setFrequency(8000);
+    format.setChannels(1);
+    format.setSampleSize(8);
+    format.setCodec("audio/pcm");
+    format.setByteOrder(QAudioFormat::LittleEndian);
+    format.setSampleType(QAudioFormat::UnSignedInt);
+    
+    QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
+    if (!info.isFormatSupported(format)) {
+        out<<"raw audio format not supported by backend, cannot play audio.\n";
+        return;
+    }
+
+    audio = new QAudioOutput(format, this);
+    connect(audio,SIGNAL(stateChanged(QAudio::State)),SLOT(finishedPlaying(QAudio::State)));
+    audio->start(&inputFile);*/

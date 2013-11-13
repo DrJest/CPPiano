@@ -28,6 +28,16 @@ mainWindowMenu* mainWindow::addMenu(QString label){
     this->menus.push_back(*m);
   return m;
 }
+ 
+int mainWindow::getMenus()
+{
+  return this->menus.size();
+}
+
+int mainWindow::getToolbars()
+{
+  return this->tbars.size();
+}
 
 mainWindow* mainWindow::draw() 
 {
@@ -51,14 +61,4 @@ mainWindow* mainWindow::draw()
 QWidget* mainWindow::getMainWidget()
 {
   return this->mainWidget;
-}
-
-void mainWindow::keyPressEvent(QKeyEvent *event)
-{
-  ((keyBoard*)(this->getMainWidget()))->getNote(event->key());
-}
- 
-void mainWindow::keyReleaseEvent(QKeyEvent *event)
-{
-  return;
 }

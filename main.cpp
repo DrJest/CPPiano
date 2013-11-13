@@ -16,29 +16,11 @@ int main(int argc, char *argv[])
     keyBoard * kb = new keyBoard(window);
     
     window->setMainWidget<keyBoard*>(kb);
-    
-    kb->addKey("a4");
-    kb->addKey("b4");
-    kb->addKey("c5");
-    kb->addKey("d5");
-    kb->addKey("e5");
-    kb->addKey("f5");
-    kb->addKey("g5");
-    kb->addKey("a5");
-    kb->addKey("b5");
-    kb->addKey("c6");
-    
-    kb->addKey("a4#");
-    kb->addKey("c5#");
-    kb->addKey("d5#");
-    kb->addKey("f5#");
-    kb->addKey("g5#");
-    kb->addKey("a5#");
-    
+
     kb->draw();
-    //set Height and Width of the main window
-    int wHeight = 230;
-    int wWidth  = 400;
+    // set Height and Width of the main window
+    int wHeight = 28 + (window->getToolbars() * 30) + ((keyBoard*)(window->getMainWidget()))->height();
+    int wWidth  = ((keyBoard*)(window->getMainWidget()))->width();
     
     //centering the window
     int x,y;
