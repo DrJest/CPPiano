@@ -19,13 +19,16 @@ Key::Key(QString name, QWidget *parent)
   this->_name = name;
   this->setGeometry(0,0,0,0);
   
+  QString style;
   if(name.right(1)=="#") 
   {
-    this->setStyleSheet("background-color: black;color: white;");
+    style = "background-color: black;color: white;";
     this->_sharp=true;
   } else {
-    this->setStyleSheet("background-color: white;color: black;");
+    style = "background-color: white;color: black;";
   }
+  this->_defaultStyle = style;
+  this->setStyleSheet(style);
   this->_valid = true;
 }
 
@@ -33,6 +36,11 @@ Key* Key::setFrequency(double f)
 {
   this->_frequency = f;
   return this;
+}
+
+Key* Key::setDefaultStyle()
+{
+  this->setStyleSheet(this->_defaultStyle);
 }
 
 bool Key::valid()
@@ -103,7 +111,7 @@ double Key::frequency()
 {
   return this->_frequency;
 }
-
+/*
 void Key::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton) {
@@ -112,4 +120,4 @@ void Key::mousePressEvent(QMouseEvent *event)
     QPushButton::mousePressEvent(event);
   }
 }
-
+*/

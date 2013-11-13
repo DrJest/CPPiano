@@ -35,7 +35,8 @@
       int height();
             
       void playNote(Key*);
-      void playNoteByKeyCode(int);
+      void stopNote(Key*);
+      Key* getNoteByKeyCode(int);
       
       keyBoard* generate(int,int,QString="a4",double=440.);
       keyBoard* sort();

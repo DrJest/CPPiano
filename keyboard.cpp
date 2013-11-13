@@ -50,9 +50,17 @@ int keyBoard::height()
 
 void keyBoard::playNote(Key* note)
 {
+    note->setStyleSheet("background-color:red");
+    this->_aOutput->stop(); 
     this->_aOutput->start( note->frequency() );
     QTextStream out(stdout);
     out << note->name() << "\n";
+}
+
+void keyBoard::stopNote(Key* note)
+{
+  note->setDefaultStyle();
+  this->_aOutput->stop();
 }
 
 keyBoard* keyBoard::generate(int minO, int maxO, QString genN, double genF)
@@ -141,7 +149,7 @@ keyBoard* keyBoard::draw()
   return this;
 }
 
-void keyBoard::playNoteByKeyCode(int keyCode)
+Key* keyBoard::getNoteByKeyCode(int keyCode)
 {
   if(this->_layout=="base")
   {
@@ -149,7 +157,7 @@ void keyBoard::playNoteByKeyCode(int keyCode)
     
     QVector<int> code{ 65, 87, 83, 68, 82, 70, 84, 71, 72, 85, 74, 73, 75, 79, 76, 80};
     QVector<QString> K{"a$p","a$p#","b$p","c$c","c$c#","d$c","d$c#","e$c","f$c","f$c#","g$c","g$c#","a$c","a$c#","b$c","c$n"};
-    if(code.indexOf(keyCode)==-1) return;
+    if(code.indexOf(keyCode)==-1) return (new Key("",this));
     
     int index = code.indexOf(keyCode);
     QString note = K.at(index);
@@ -158,7 +166,7 @@ void keyBoard::playNoteByKeyCode(int keyCode)
 
     for (int i= 0; i< this->_keys.size(); ++i)
     {
-      if(note==this->_keys.at(i)->name()) { playNote(this->_keys.at(i)); return; }
+      if(note==this->_keys.at(i)->name()) { return this->_keys.at(i); }
     }
   }
 }
@@ -178,10 +186,13 @@ void keyBoard::keyPressEvent(QKeyEvent *event)
     this->_curOctave = qMin(_curOctave+1,_maxOctave);
     return;
   }
-  this->playNoteByKeyCode(KC);
+  Key* t = this->getNoteByKeyCode(KC);
+  if(t->valid()) playNote(t);
 }
  
 void keyBoard::keyReleaseEvent(QKeyEvent *event)
 {
+  Key* t = this->getNoteByKeyCode(event->key());
+  if(t->valid()) stopNote(t);
   return;
 }

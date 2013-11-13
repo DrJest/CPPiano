@@ -26,6 +26,7 @@
       int left();
       Key* setGeometry(int,int,int,int);
       Key* setFrequency(double);
+      Key* setDefaultStyle();
       
       QString name();
       double frequency();
@@ -33,10 +34,11 @@
       bool valid();
       
     protected:
-      void mousePressEvent(QMouseEvent*);
+      //void mousePressEvent(QMouseEvent*);
     
     private:
       QString _name;
+      QString _defaultStyle;
       QWidget* _parent;
       int _left, _top, _width, _height;
       double _frequency;
