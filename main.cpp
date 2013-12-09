@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     
     window->setMainWidget<keyBoard*>(kb);
 
-    kb->draw();
+    kb->generate(3,5)->draw();
     // set Height and Width of the main window
     int wHeight = 28 + (window->getToolbars() * 30) + ((keyBoard*)(window->getMainWidget()))->height();
     int wWidth  = ((keyBoard*)(window->getMainWidget()))->width();

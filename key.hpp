@@ -15,18 +15,23 @@
   #include <QTextStream>
   #include <QWidget>
   #include <QMouseEvent>
+  #include "audiooutputstreamer.hpp"
+
     
   class Key : public QPushButton
   {
     Q_OBJECT
     
     public:
+      Key();
       Key(QString, QWidget*);
       ~Key(){};
       int left();
       Key* setGeometry(int,int,int,int);
       Key* setFrequency(double);
       Key* setDefaultStyle();
+      void play();
+      void stop();
       
       QString name();
       double frequency();
@@ -44,6 +49,9 @@
       double _frequency;
       bool _sharp = false;
       bool _valid = false;
+
+      AudioOutputStreamer* _aOutput;
+
   };
 
 #endif

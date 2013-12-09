@@ -14,7 +14,6 @@
   #include <QMap>
   #include <QLabel>
   #include "key.hpp"
-  #include "audiooutputstreamer.hpp"
 
   class keyBoard : public QWidget
   {
@@ -72,8 +71,6 @@
       
       QLabel* _topBar;
       
-      AudioOutputStreamer* _aOutput;
-
   };
 
 #endif

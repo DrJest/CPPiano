@@ -6,7 +6,6 @@
 keyBoard::keyBoard(QWidget *parent)
   : QWidget(parent)
 {
-  this->_aOutput = new AudioOutputStreamer();
 }
 
 keyBoard* keyBoard::setCKeyHeight(int h)
@@ -51,16 +50,15 @@ int keyBoard::height()
 void keyBoard::playNote(Key* note)
 {
     note->setStyleSheet("background-color:red");
-    this->_aOutput->stop(); 
-    this->_aOutput->start( note->frequency() );
+    note->play();
     QTextStream out(stdout);
-    out << note->name() << "\n";
+    out << note->name() << " ";
 }
 
 void keyBoard::stopNote(Key* note)
 {
   note->setDefaultStyle();
-  this->_aOutput->stop();
+  note->stop();
 }
 
 keyBoard* keyBoard::generate(int minO, int maxO, QString genN, double genF)
@@ -75,6 +73,7 @@ keyBoard* keyBoard::generate(int minO, int maxO, QString genN, double genF)
   this->_curOctave = genN.mid(1,1).toInt();
   this->_minOctave = minO;
   this->_maxOctave = maxO;
+  this->_generated = true;
   
   QString h = "";
   if(genN.right(1)=="#") h="#";
@@ -116,13 +115,11 @@ keyBoard* keyBoard::generate(int minO, int maxO, QString genN, double genF)
     (allNotes.at(i).right(1)=="#") ? this->aNotes[f]=allNotes.at(i) : this->cNotes[f]=allNotes.at(i); 
   }
   return this;
-  
-  this->_generated = true;
 }
 
 keyBoard* keyBoard::draw() 
 {
-  if( !this->_generated ) {
+  if( this->_generated == false ) {
     this->generate(4, 4);
   }
 
@@ -157,7 +154,7 @@ Key* keyBoard::getNoteByKeyCode(int keyCode)
     
     QVector<int> code{ 65, 87, 83, 68, 82, 70, 84, 71, 72, 85, 74, 73, 75, 79, 76, 80};
     QVector<QString> K{"a$p","a$p#","b$p","c$c","c$c#","d$c","d$c#","e$c","f$c","f$c#","g$c","g$c#","a$c","a$c#","b$c","c$n"};
-    if(code.indexOf(keyCode)==-1) return (new Key("",this));
+    if(code.indexOf(keyCode)==-1) return (new Key());
     
     int index = code.indexOf(keyCode);
     QString note = K.at(index);
@@ -169,6 +166,7 @@ Key* keyBoard::getNoteByKeyCode(int keyCode)
       if(note==this->_keys.at(i)->name()) { return this->_keys.at(i); }
     }
   }
+  return (new Key());
 }
 
 void keyBoard::keyPressEvent(QKeyEvent *event)
@@ -177,13 +175,17 @@ void keyBoard::keyPressEvent(QKeyEvent *event)
   int KC = event->key();
   if(KC==Qt::Key_Control)
   {
-    this->_curOctave = qMax(_curOctave-1,_minOctave);
+    _curOctave = _curOctave-1;
+    if(_curOctave<_minOctave) _curOctave = _minOctave;
+    this->updateTopBar();
     return;
   }
   
   if(KC==Qt::Key_Shift)
   {
-    this->_curOctave = qMin(_curOctave+1,_maxOctave);
+    this->_curOctave = _curOctave+1;
+    if(_curOctave>_maxOctave) _curOctave = _maxOctave;
+    this->updateTopBar();
     return;
   }
   Key* t = this->getNoteByKeyCode(KC);

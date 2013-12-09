@@ -1,6 +1,6 @@
 #include "audiooutputstreamer.hpp"
 
-AudioOutputStreamer::AudioOutputStreamer()
+AudioOutputStreamer::AudioOutputStreamer(int f)
 {
 	_samplingRate = 44100;
 
@@ -26,6 +26,8 @@ AudioOutputStreamer::AudioOutputStreamer()
 	_amplitude = 10.;
 	_delta_t = 1/_samplingRate;
 
+  _omega = 2*PI*f;
+
 	_IDWrittenSample = 0;
 	_sizeNolBuffer = 0;
 
@@ -35,12 +37,10 @@ AudioOutputStreamer::~AudioOutputStreamer()
 {
 }
 
-void AudioOutputStreamer::start(int f)
+void AudioOutputStreamer::start()
 {
   
 	QObject::connect(_audio, SIGNAL(notify()), this, SLOT(slot_writeMoreData()));
-  
-  _omega = 2*PI*f;
   
 	_pAudioIOBuffer = _audio->start();
 

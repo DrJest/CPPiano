@@ -20,9 +20,9 @@ class AudioOutputStreamer : public QObject
 	Q_OBJECT
 
 	public:
-    	AudioOutputStreamer();
+    	AudioOutputStreamer(int);
     	~AudioOutputStreamer();
-    	void start(int);
+    	void start();
       void stop();
 
 	public slots:
