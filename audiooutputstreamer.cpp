@@ -55,7 +55,8 @@ void AudioOutputStreamer::start()
 void AudioOutputStreamer::stop()
 {
   _audio->stop();
-  //_audio->reset();
+  _audio->reset();
+  _IDWrittenSample = 0;
 }
 
 void AudioOutputStreamer::slot_writeMoreData()
@@ -80,7 +81,6 @@ void AudioOutputStreamer::slot_writeMoreData()
 
     	if (_IDWrittenSample>_samplingRate) {
         	QObject::disconnect(_audio, SIGNAL(notify()), this, SLOT(slot_writeMoreData()));
-        	_IDWrittenSample = 0;
         	_audio->stop();
     	}
 	}
