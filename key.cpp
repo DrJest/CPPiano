@@ -2,6 +2,7 @@
 #include "keyboard.hpp"
 #include <QMap>
 #include <QRegExp>
+#include <unistd.h>
 
 Key::Key()
 { 
@@ -13,7 +14,7 @@ Key::Key(QString name, QWidget *parent)
   // nt must be formatted as: [a-g][1-7][#]{0,1}
   // so i trim the first 3 letters and use a regex
   name = name.left(3);
-  if(!name.contains(QRegExp("[a-g][0-7][#]{0,1}")) ) 
+  if(!name.contains(QRegExp("[a-g][0-7][#]{0,1}")) && name!="c8") 
   {
     QTextStream out(stdout);
     out << "Error: " << name << "is not a valid keynote\n";
@@ -39,7 +40,7 @@ Key::Key(QString name, QWidget *parent)
 Key* Key::setFrequency(double f)
 {
   this->_frequency = f;
-  this->_aOutput = new AudioOutputStreamer(f);
+  this->_aOutput = new AudioOutputStreamer(f, this);
   return this;
 }
 
@@ -51,12 +52,16 @@ Key* Key::setDefaultStyle()
 
 void Key::play()
 {
+  this->setStyleSheet("background-color:red");
   this->_aOutput->start();
+  this->_playing = true;
 }
 
 void Key::stop()
 {
+  this->setDefaultStyle();
   this->_aOutput->stop();
+  this->_playing=false;
 }
 
 bool Key::valid()
@@ -93,7 +98,7 @@ double Key::frequency()
 {
   return this->_frequency;
 }
-/*
+
 void Key::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton) {
@@ -102,4 +107,4 @@ void Key::mousePressEvent(QMouseEvent *event)
     QPushButton::mousePressEvent(event);
   }
 }
-*/
+

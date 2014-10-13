@@ -1,7 +1,9 @@
 #include "audiooutputstreamer.hpp"
+#include "key.hpp"
 
-AudioOutputStreamer::AudioOutputStreamer(int f)
+AudioOutputStreamer::AudioOutputStreamer(int f, Key* key)
 {
+	_key = key;
 	// e' il sampling rate 
 	_samplingRate = 44100;
 
@@ -10,7 +12,7 @@ AudioOutputStreamer::AudioOutputStreamer(int f)
 	format.setFrequency(_samplingRate);
 	format.setChannels(1);
 	format.setSampleSize(8);
-	format.setCodec("audio/ogg");
+	format.setCodec("audio/mp3");
 	format.setByteOrder(QAudioFormat::LittleEndian);
 	format.setSampleType(QAudioFormat::SignedInt);
 
@@ -24,7 +26,7 @@ AudioOutputStreamer::AudioOutputStreamer(int f)
 	_audio->setNotifyInterval(50);
 	_audio->setBufferSize(32768);//in bytes
 
-	_amplitude = 10.;
+//	_amplitude = 10.;
 	_delta_t = 1/_samplingRate;
 
     _omega = 2*PI*f;
@@ -72,7 +74,7 @@ void AudioOutputStreamer::slot_writeMoreData()
     	short int value = 0;
     	for (int IDSample=0; IDSample<nbBytes; ++IDSample) {
         	float time = (float)_IDWrittenSample * _delta_t;
-        	value = (signed char) (_amplitude*(float)(sin(_omega*time)));
+        	value = (signed char) (10.*(float)(sin(_omega*time)));
         	_buffer[IDSample] = value;
         	++_IDWrittenSample;
     	}
@@ -81,7 +83,8 @@ void AudioOutputStreamer::slot_writeMoreData()
 
     	if (_IDWrittenSample>_samplingRate) {
         	QObject::disconnect(_audio, SIGNAL(notify()), this, SLOT(slot_writeMoreData()));
-        	_audio->stop();
+        	//_audio->stop();
+        	_key->stop();
     	}
 	}
 }

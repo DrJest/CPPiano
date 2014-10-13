@@ -1,14 +1,39 @@
 #include <QDesktopWidget>
 #include <QWidget>
 #include <QIcon>
+#include <QString>
 
 #include "mainWindow.hpp"
 #include "keyboard.hpp"
+#include <iostream> 
+#include <unistd.h>
 
 int main(int argc, char *argv[])
-{    
+{
+    QString layoutFile = "";
+    int opt;
+    int min = 2, max = 5;
+    while ( (opt = getopt(argc, argv, "hk:b:t:")) != -1 ) {  
+        switch ( opt ) {
+            case 'h':
+                std::cout << "Usage:" << std::endl;
+                return 0;
+                break;
+            case 'k':
+                layoutFile = QString::fromStdString(optarg);
+                break;
+            case 'b':
+                min =  atoi(optarg);
+                break;
+            case 't':
+                max = atoi(optarg);
+                break;
+            case '?':
+                return 1;
+                break;
+        }
+    }
     QApplication app(argc, argv);  
-    
     mainWindow * window = new mainWindow;
     
     QDesktopWidget * dt = QApplication::desktop();
@@ -16,8 +41,15 @@ int main(int argc, char *argv[])
     keyBoard * kb = new keyBoard(window);
     
     window->setMainWidget<keyBoard*>(kb);
-
-    kb->generate(3,5)->draw();
+    
+    if(layoutFile=="")
+        kb->generate(min,max);
+    else
+        kb->generate(min,max,layoutFile);
+    
+    std::cout << "Hello" << std::endl;
+    
+    kb->draw();
     // set Height and Width of the main window
     int wHeight = 28 + (window->getToolbars() * 30) + ((keyBoard*)(window->getMainWidget()))->height();
     int wWidth  = ((keyBoard*)(window->getMainWidget()))->width();

@@ -37,7 +37,7 @@
       void stopNote(Key*);
       Key* getNoteByKeyCode(int);
       
-      keyBoard* generate(int,int,QString="a4",double=440.);
+      keyBoard* generate(int,int,QString="assets/default.keys",QString="a4",double=440.);
       keyBoard* sort();
       keyBoard* draw();
       
@@ -58,6 +58,9 @@
       int aKeyWidth = 30;
       int aKeyHeight = 80;
       
+      int Xoffset = 0;
+      int Yoffset = 0;
+
       // keyboard access is based on layout. default layout is "base"
       QString _layout="base";
       int _curOctave;
@@ -71,6 +74,8 @@
       
       QLabel* _topBar;
       
+      QVector<int> code;
+      QVector<QString> K;
   };
 
 #endif

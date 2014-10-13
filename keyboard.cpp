@@ -1,5 +1,6 @@
 #include <QAudio>
 #include <QAudioOutput>
+#include <QDesktopWidget>
 #include "key.hpp"
 #include "keyboard.hpp"
 
@@ -40,16 +41,15 @@ keyBoard* keyBoard::updateTopBar()
 
 int keyBoard::width() 
 {
-  return this->cNotes.count() * this->cKeyWidth;
+  return qMin(this->cNotes.count() * this->cKeyWidth, -Xoffset);
 }
 int keyBoard::height() 
 {
-  return this->cKeyHeight+30;
+  return (this->cKeyHeight*(Yoffset+1))+30;
 }
 
 void keyBoard::playNote(Key* note)
 {
-    note->setStyleSheet("background-color:red");
     note->play();
     QTextStream out(stdout);
     out << note->name() << " ";
@@ -57,12 +57,32 @@ void keyBoard::playNote(Key* note)
 
 void keyBoard::stopNote(Key* note)
 {
-  note->setDefaultStyle();
   note->stop();
 }
 
-keyBoard* keyBoard::generate(int minO, int maxO, QString genN, double genF)
+keyBoard* keyBoard::generate(int minO, int maxO, QString keyFile, QString genN, double genF)
 {
+    QTextStream out(stdout);
+
+    QFile file(keyFile);
+    if(!file.open(QIODevice::ReadOnly)) {
+      out << "File not found";
+      return (new keyBoard());
+    }
+
+    QTextStream in(&file);
+    int i;
+    char* c;
+    while(!in.atEnd()) {
+        QString line = in.readLine();
+        QStringList fields = line.split(" ");
+        QByteArray ba = fields[0].toLocal8Bit();
+        c = ba.data();
+        i = c[0] - (fields[0].contains(*(new QRegExp("[0-9]")))?0:32);
+        code.push_back(i);
+        K.push_back(fields[1]);
+    }
+    file.close();
   genN = genN.left(3);
   if(!genN.contains(QRegExp("[a-g][1-8][#]{0,1}")) ) 
   {
@@ -111,7 +131,7 @@ keyBoard* keyBoard::generate(int minO, int maxO, QString genN, double genF)
   {
     f = genF * pow(a, (i-n));
     // cant draw buttons now, it will caused sovrapposition of cNotes on aNotes
-    // notes are sorteb by frequency, because it is always crescent(?)
+    // notes are sorted by frequency, because it is always crescent(?)
     (allNotes.at(i).right(1)=="#") ? this->aNotes[f]=allNotes.at(i) : this->cNotes[f]=allNotes.at(i); 
   }
   return this;
@@ -119,25 +139,46 @@ keyBoard* keyBoard::generate(int minO, int maxO, QString genN, double genF)
 
 keyBoard* keyBoard::draw() 
 {
+  QDesktopWidget desktop;
+  QTextStream out(stdout);
+  int desktopWidth=desktop.geometry().width();
   if( this->_generated == false ) {
     this->generate(4, 4);
   }
 
-  int left = 0;  
+  int left = 0, top = 20;
+  QString last = "";
+  bool checked = false;
     for( auto i : this->cNotes.keys() )
     {
       Key* t = new Key(cNotes.value(i), this);
       this->_keys.push_back(t);
-      t->setGeometry(left, 20, this->cKeyWidth, this->cKeyHeight)->setFrequency( i );
+      t->setGeometry(left, top, this->cKeyWidth, this->cKeyHeight)->setFrequency( i );
       left += this->cKeyWidth;
+      if (checked==true) {
+        last = cNotes.value(i);
+        checked = false;
+      }
+      if (left+3*this->cKeyWidth >= desktopWidth && (cNotes.value(i).left(1)=="e" || cNotes.value(i).left(1)=="b")) {
+        Yoffset++;
+        Xoffset -= left;
+        left = 0;
+        top += this->cKeyHeight;
+        checked = true;
+      } 
     }
     left = this->cKeyWidth - ( this->aKeyWidth / 2 );
+    top = 20;
     for( auto j : this->aNotes.keys() )
     {
       if(aNotes.value(j).left(1) == "c" || aNotes.value(j).left(1) == "f") left += this->cKeyWidth;
+      if (aNotes.value(j).left(2) == last) {
+        left = this->cKeyWidth - ( this->aKeyWidth / 2 );
+        top += this->cKeyHeight;
+      }
       Key* t = new Key(aNotes.value(j), this);
       this->_keys.push_back(t);
-      t->setGeometry(left, 20, this->aKeyWidth, this->aKeyHeight)->setFrequency( j );
+      t->setGeometry(left, top, this->aKeyWidth, this->aKeyHeight)->setFrequency( j );
       left += this->cKeyWidth;
     }
     QLabel* fb = new QLabel(this);
@@ -148,23 +189,18 @@ keyBoard* keyBoard::draw()
 
 Key* keyBoard::getNoteByKeyCode(int keyCode)
 {
-  if(this->_layout=="base")
-  {
-    int cur = this->_curOctave;
-    
-    QVector<int> code{ 65, 87, 83, 68, 82, 70, 84, 71, 72, 85, 74, 73, 75, 79, 76, 80};
-    QVector<QString> K{"a$p","a$p#","b$p","c$c","c$c#","d$c","d$c#","e$c","f$c","f$c#","g$c","g$c#","a$c","a$c#","b$c","c$n"};
-    if(code.indexOf(keyCode)==-1) return (new Key());
-    
-    int index = code.indexOf(keyCode);
-    QString note = K.at(index);
-    
-    note = note.replace("$c",QString::number(cur)).replace("$p",QString::number(cur-1)).replace("$n",QString::number(cur+1));
+  int cur = this->_curOctave;
 
-    for (int i= 0; i< this->_keys.size(); ++i)
-    {
-      if(note==this->_keys.at(i)->name()) { return this->_keys.at(i); }
-    }
+  if(code.indexOf(keyCode)==-1) return (new Key());
+  
+  int index = code.indexOf(keyCode);
+  QString note = K.at(index);
+  
+  note = note.replace("$c",QString::number(cur)).replace("$p",QString::number(cur-1)).replace("$n",QString::number(cur+1));
+
+  for (int i= 0; i< this->_keys.size(); ++i)
+  {
+    if(note==this->_keys.at(i)->name()) { return this->_keys.at(i); }
   }
   return (new Key());
 }
@@ -173,6 +209,7 @@ void keyBoard::keyPressEvent(QKeyEvent *event)
 {
   QTextStream out(stdout);
   int KC = event->key();
+  
   if(KC==Qt::Key_Control)
   {
     _curOctave = _curOctave-1;

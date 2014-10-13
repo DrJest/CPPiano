@@ -3,9 +3,6 @@
  * 
  * Contains and implements keyboard keys
  * 
- * for error Gtk-CRITICAL **: IA__gtk_widget_get_direction: assertion `GTK_IS_WIDGET (widget)' failed
- * https://bugzilla.redhat.com/show_bug.cgi?id=924683
- * 
  * **/ 
 
 #ifndef KEY_H
@@ -17,7 +14,6 @@
   #include <QMouseEvent>
   #include "audiooutputstreamer.hpp"
 
-    
   class Key : public QPushButton
   {
     Q_OBJECT
@@ -39,7 +35,7 @@
       bool valid();
       
     protected:
-      //void mousePressEvent(QMouseEvent*);
+      void mousePressEvent(QMouseEvent*);
     
     private:
       QString _name;
@@ -49,6 +45,8 @@
       double _frequency;
       bool _sharp = false;
       bool _valid = false;
+
+      bool _playing = false;
 
       AudioOutputStreamer* _aOutput;
 

@@ -1,46 +1,46 @@
 #ifndef AUDIOOUTPUTSTREAMER_H
-#define AUDIOOUTPUTSTREAMER_H
+    #define AUDIOOUTPUTSTREAMER_H
 
-#include <QObject>
-#include <QAudioOutput>
-#include <QAudioFormat>
-#include <QIODevice>
-#include <QAudioDeviceInfo>
-#include <QDebug>
+        #include <QObject>
+        #include <QAudioOutput>
+        #include <QAudioFormat>
+        #include <QIODevice>
+        #include <QAudioDeviceInfo>
+        #include <QDebug>
 
-#include <math.h>
-#include <iostream>
+        #include <math.h>
+        #include <iostream>
 
-#define PI 3.14159265
 
-using namespace std;
+        #define PI 3.14159265
 
-class AudioOutputStreamer : public QObject
-{
-	Q_OBJECT
+        class Key;
 
-	public:
-    	AudioOutputStreamer(int);
-    	~AudioOutputStreamer();
-    	void start();
-      void stop();
+        class AudioOutputStreamer : public QObject
+        {
+        	Q_OBJECT
 
-	public slots:
-    	void slot_writeMoreData();
+        	public:
+            	AudioOutputStreamer(int, Key*);
+            	~AudioOutputStreamer();
+            	void start();
+              void stop();
 
-	private:
-    	QAudioOutput* _audio;
-    	QIODevice* _pAudioIOBuffer;
+        	public slots:
+            	void slot_writeMoreData();
 
-    	float _samplingRate;
+        	private:
+            	QAudioOutput* _audio;
+            	QIODevice* _pAudioIOBuffer;
 
-    	unsigned long _IDWrittenSample;
-    	float _amplitude;
-    	float _delta_t;
-    	float _omega;
-    	signed char* _buffer;
-    	int _sizeNolBuffer;
+            	float _samplingRate;
 
-};
+            	unsigned long _IDWrittenSample;
+            	float _delta_t;
+            	float _omega;
+            	signed char* _buffer;
+            	int _sizeNolBuffer;
+                Key* _key;
+        };
         	
 #endif
