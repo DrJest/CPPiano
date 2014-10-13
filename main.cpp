@@ -13,8 +13,12 @@ int main(int argc, char *argv[])
     QString layoutFile = "";
     int opt;
     int min = 2, max = 5;
-    while ( (opt = getopt(argc, argv, "hk:b:t:")) != -1 ) {  
+    while ( (opt = getopt(argc, argv, "hvk:b:t:")) != -1 ) {  
         switch ( opt ) {
+            case 'v':
+                std::cout << "CPPiano v1.02 - Licensed under GNU/LGPL v3.0"
+                return 0;
+                break;
             case 'h':
                 std::cout << "Usage:" << std::endl;
                 return 0;
