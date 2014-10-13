@@ -41,7 +41,10 @@ keyBoard* keyBoard::updateTopBar()
 
 int keyBoard::width() 
 {
-  return qMin(this->cNotes.count() * this->cKeyWidth, -Xoffset);
+  if(Xoffset<0)
+    return qMin(this->cNotes.count() * this->cKeyWidth, -Xoffset);
+  return
+    this->cNotes.count() * this->cKeyWidth;
 }
 int keyBoard::height() 
 {
@@ -209,7 +212,7 @@ void keyBoard::keyPressEvent(QKeyEvent *event)
 {
   QTextStream out(stdout);
   int KC = event->key();
-  
+
   if(KC==Qt::Key_Control)
   {
     _curOctave = _curOctave-1;
