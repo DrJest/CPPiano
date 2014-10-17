@@ -1,3 +1,11 @@
+/**
+*
+* mainWindow.hpp
+*
+* Instanzia e disegna la finestra
+*
+***/ 
+
 #include "mainWindow.hpp"
 #include "keyboard.hpp"
 
@@ -6,24 +14,24 @@ mainWindow::mainWindow(QWidget *parent)
 {
 }
 
-// draws default file->quit menu
+//  Disegna l'opzione quit nella finestra, nella finestrella file
 mainWindow* mainWindow::defaultMenus()
 {
+    //QAction *UpOct = new QAction( "&UpOct", this);
     QAction *quit = new QAction("&Quit", this);
     quit->setShortcut(Qt::Key_Q | Qt::CTRL);
     QMenu *file; 
     file = menuBar()->addMenu("&File");
     file->addAction(quit);
+    //file->addAction(UpOct); 
+
+   // connect(UpOct, SIGNAL(triggered()), keyBoard * keyBoard(this->parent), SLOT(keyboard->keyPressEvent(Qt::Key_Control)));
     connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));    
     return this;
 }
 
-// this adds both menus and toolbars !
 mainWindowMenu* mainWindow::addMenu(QString label){
   mainWindowMenu* m = new mainWindowMenu();
-  // Toolbars don't need label, so we gonna call it with NO args
-  // if we want a toolbar, with a QString if we want a menu
-  // NOTE: menus and toolbars are actually instantied in this->draw();
   if(label != "")
     this->menus.push_back(*m);
   return m;

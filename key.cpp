@@ -1,3 +1,11 @@
+/**
+ * key.cpp
+ * 
+ * crea i tasti della tastiera, gli associa un nome e una frequenza 
+ * 
+ * **/ 
+
+
 #include "key.hpp"
 #include "keyboard.hpp"
 #include <QMap>
@@ -11,8 +19,7 @@ Key::Key()
 Key::Key(QString name, QWidget *parent)
   : QPushButton(name, parent)
 {
-  // nt must be formatted as: [a-g][1-7][#]{0,1}
-  // so i trim the first 3 letters and use a regex
+  // Uso le regex per accettare solo le note 
   name = name.left(3);
   if(!name.contains(QRegExp("[a-g][0-7][#]{0,1}")) && name!="c8") 
   {
@@ -21,9 +28,11 @@ Key::Key(QString name, QWidget *parent)
     return;
   }
   
+  //do il nome alla nota e ne setto la posizione nella finestra
   this->_name = name;
   this->setGeometry(0,0,0,0);
   
+  //Setta lo stile Default in funzione delle alterazioni
   QString style;
   if(name.right(1)=="#") 
   {
@@ -37,6 +46,8 @@ Key::Key(QString name, QWidget *parent)
   this->_valid = true;
 }
 
+//Setta la frequenza.
+//Crea un nuovo AudioOutputStreamer con frequenza f e con le variabili di questa key.
 Key* Key::setFrequency(double f)
 {
   this->_frequency = f;
@@ -44,12 +55,14 @@ Key* Key::setFrequency(double f)
   return this;
 }
 
+//Setta lo stile
 Key* Key::setDefaultStyle()
 {
   this->setStyleSheet(this->_defaultStyle);
   return this;
 }
 
+//Quando suono do start a AudioOutputStreamer e coloro in rosso
 void Key::play()
 {
   this->setStyleSheet("background-color:red");
@@ -57,6 +70,7 @@ void Key::play()
   this->_playing = true;
 }
 
+//Quando smetto di suonare, stoppo AudioOutputStreamer e risetto lo stile
 void Key::stop()
 {
   this->setDefaultStyle();
@@ -64,21 +78,25 @@ void Key::stop()
   this->_playing=false;
 }
 
+//Ritorna la validita della nota
 bool Key::valid()
 {
   return this->_valid;
 }
 
+//Ritorna l'alterazione della nota
 bool Key::sharp()
 {
   return this->_sharp;
 }
 
+//Restituisce la larghezza
 int Key::left()
 {
   return this->_left;
 }
 
+//Setta le dimensioni e le coordinate spaziali e posiziona il bottone associato alla nota.
 Key* Key::setGeometry(int l, int t, int w, int h)
 {
   this->_left=l;
@@ -89,16 +107,19 @@ Key* Key::setGeometry(int l, int t, int w, int h)
   return this;
 }
 
+//restituisce il nome
 QString Key::name()
 {
   return this->_name;
 }
 
+//restituisce la frequenza
 double Key::frequency()
 {
   return this->_frequency;
 }
 
+//Fa suonare la nota alla pressione col mouse. playNote appartiene a keyBoard
 void Key::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton) {
@@ -107,4 +128,3 @@ void Key::mousePressEvent(QMouseEvent *event)
     QPushButton::mousePressEvent(event);
   }
 }
-

@@ -1,7 +1,3 @@
-/**
- * mainWindow.hpp
- * **/ 
-
 #ifndef MAINWINDOW_H
   #define MAINWINDOW_H
 
@@ -46,19 +42,10 @@ class mainWindowMenu
     Q_OBJECT
     public:
       mainWindow(QWidget *parent = 0); 
-      // AS jQuery teaches, void functions are useless. I make each 
-      // function return the instantied element's pointer itself
       QWidget* getMainWidget();
-      
-      // children could be ANY type of QObject.
-      // template allows me to avoid overload this method for
-      // each of the pretty INFINITE type of QObject tha could be
-      // derived from the original class 
+       
       template<class C>
       QWidget* setMainWidget(C w) {
-        // dynamic_cast operator should be used instead!!
-        // but since it's only me gonna be running this
-        // i make an explicit cast in order to reduce runtime work
         this->mainWidget = (QWidget*) w;
         return this->mainWidget;
       };
