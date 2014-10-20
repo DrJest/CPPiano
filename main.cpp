@@ -10,7 +10,7 @@
 
 int main(int argc, char *argv[])
 {
-    QString layoutFile = "";
+    QString layoutFile = "assets/default.keys";
     int opt;
     int min = 2, max = 5;
     while ( (opt = getopt(argc, argv, "hvk:b:t:")) != -1 ) {  
@@ -46,10 +46,7 @@ int main(int argc, char *argv[])
     
     window->setMainWidget<keyBoard*>(kb);
     
-    if(layoutFile=="")
-        kb->generate(min,max);
-    else
-        kb->generate(min,max,layoutFile);
+    kb->generate(min,max,layoutFile);
     
     std::cout << "Hello" << std::endl;
     
