@@ -36,12 +36,15 @@ mainWindow* mainWindow::defaultMenus()
     QMenu *edit;
     QAction *defaults = new QAction("Default", this);
     QAction *complete = new QAction("Complete", this);
+    defaults->setCheckable(true);
+    complete->setCheckable(true);
     edit = menuBar()->addMenu("&Modifica");
 
     QActionGroup* layouts = new QActionGroup(edit);
     layouts->addAction(defaults);
     layouts->addAction(complete);
     defaults->setChecked(true);
+    layouts->setExclusive(true);
 
     edit->addAction(defaults);
     edit->addAction(complete);
