@@ -11,6 +11,10 @@
   #include <QMenu>
   #include <QTextStream>
   #include <QMap>
+  #include "keyboard.hpp"
+  //#include "keyboard.cpp"
+
+
 
 struct mainWindowMenuItem
 {
@@ -59,6 +63,7 @@ class mainWindowMenu
       int getMenus();
 
     private:
+      keyBoard* keyboard;
       QWidget* mainWidget;
       QVector<mainWindowMenu> menus;
       QVector<mainWindowMenu> tbars;

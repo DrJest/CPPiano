@@ -269,7 +269,7 @@ Key* keyBoard::getNoteByKeyCode(int keyCode)
   return (new Key());
 }
 
-//Funzione che permette di alzare o abbassare l'ottava, e 
+//Funzione che permette di alzare o abbassare l'ottava con ctrl e shift, e da playNote con le altre XD
 void keyBoard::keyPressEvent(QKeyEvent *event)
 {
   QTextStream out(stdout);
@@ -300,4 +300,12 @@ void keyBoard::keyReleaseEvent(QKeyEvent *event)
   Key* t = this->getNoteByKeyCode(event->key());
   if(t->valid()) stopNote(t);
   return;
+}
+
+
+void keyBoard::keyShiftEvent(){
+
+  this->_curOctave = _curOctave+1;
+  if(_curOctave>_maxOctave) _curOctave = _maxOctave;
+  this->updateTopBar();
 }
