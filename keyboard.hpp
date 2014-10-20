@@ -42,8 +42,8 @@
       keyBoard* draw();
 
     public slots:
-      void keyShiftEvent();
-
+      void chOctEventUp();
+      void chOctEventDown();
       
     protected:
       void keyPressEvent(QKeyEvent *);
@@ -65,8 +65,6 @@
       int Xoffset = 0;
       int Yoffset = 0;
 
-      // keyboard access is based on layout. default layout is "base"
-      QString _layout="base";
       int _curOctave;
       int _minOctave;
       int _maxOctave;

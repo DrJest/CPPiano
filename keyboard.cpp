@@ -11,7 +11,7 @@
 #include "key.hpp"
 #include "keyboard.hpp"
 
-//Crea keyboard usando un QWidget (ossia mainwindow??????????????)
+//Crea keyboard usando un QWidget (ossia mainwindow)
 keyBoard::keyBoard(QWidget *parent)
   : QWidget(parent)
 {
@@ -302,10 +302,17 @@ void keyBoard::keyReleaseEvent(QKeyEvent *event)
   return;
 }
 
-
-void keyBoard::keyShiftEvent(){
-
+void keyBoard::chOctEventUp(){
+  QTextStream o(stdout);
+  o << _curOctave;
   this->_curOctave = _curOctave+1;
   if(_curOctave>_maxOctave) _curOctave = _maxOctave;
+  this->updateTopBar();
+  o << _curOctave;
+}
+
+void keyBoard::chOctEventDown(){
+  this->_curOctave = _curOctave-1;
+  if(_curOctave<_minOctave) _curOctave = _minOctave;
   this->updateTopBar();
 }

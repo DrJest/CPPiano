@@ -17,18 +17,20 @@ mainWindow::mainWindow(QWidget *parent)
 //  Disegna l'opzione quit nella finestra, nella finestrella file
 mainWindow* mainWindow::defaultMenus()
 {
-
-    keyBoard *keyboard = new keyBoard; 
-    QAction *UpOct = new QAction( "&UpOct", this);
+    QAction *UpOct = new QAction("Octave &Up", this);
+    QAction *DownOct = new QAction("Octave &Down", this);
     QAction *quit = new QAction("&Quit", this);
     quit->setShortcut(Qt::Key_Q | Qt::CTRL);
     QMenu *file; 
     file = menuBar()->addMenu("&File");
-    file->addAction(quit);
-    file->addAction(UpOct); 
+    connect(UpOct, SIGNAL(triggered()), this->mainWidget, SLOT(chOctEventUp()));
+    connect(DownOct, SIGNAL(triggered()), this->mainWidget, SLOT(chOctEventDown()));
+    connect(quit, SIGNAL(triggered()), qApp, SLOT(quit())); 
 
-    connect(UpOct, SIGNAL(triggered()), keyboard, SLOT(keyShiftEvent()));
-    connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));    
+    file->addAction(UpOct); 
+    file->addAction(DownOct); 
+    file->addAction(quit);
+    
     return this;
 }
 
