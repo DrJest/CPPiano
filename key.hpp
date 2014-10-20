@@ -1,10 +1,3 @@
-/**
- * key.hpp
- * 
- * Contains and implements keyboard keys
- * 
- * **/ 
-
 #ifndef KEY_H
   #define KEY_H
 

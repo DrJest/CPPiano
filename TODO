@@ -1,0 +1,31 @@
+Premettendo che queste cose le voglio fare io da solo, tanto per aver messo anche un pò la mia mano in questo progetto XD
+Le mie idee sono:
+
+-Permettere di alzare o abbassare l'ottava tramite statusbar
+Ho provato a fare qualcosa nella mainwindow, copiando il quit, ma non so come dirgli, voglio che usi la funzione scritta per i tasti
+
+-Cambiare tastiera da statusbar
+Questo è piu difficile, ho qualche idea ma vorrei chiederti in che modo secondo te è più furbo
+
+-Cambiare timbro da statusbar
+come prima
+
+//Piano (10.*(float)(sin(_omega*time)+0.2*sin(2*_omega*time)+0.25*sin(3*_omega*time)+0.1*sin(4*_omega*time)+0.1*sin(5*_omega*time)));
+
+//Violino (10.*(float)(sin(_omega*time)+sin(2*_omega*time)+0.45*sin(3*_omega*time)+0.5*sin(4*_omega*time)+sin(5*_omega*time)+0.02*sin(6*_omega*time)+0.025sin(7*_omega*time)+0.03sin(8*_omega*time)));
+
+- Far suonara file input
+non ne ho la ben che minima idea :) o meglio saprei come farlo, ma secondo me è un casino.
+
+Profondo rosso
+A A E+ A A D+ A A C+ A G B B F+ / 
+A A E+ A A D+ A A C+ A G B B F+ C+ F+  
+A A E+ A A D+ A A C+ A G B B F+
+
+-> complete keys
+
+s s l s s j s s h s p f f z
+s s l s s j s s h s p f f z g z
+s s l s s j s s h s p f f z
+
+P.S. Se settimana prossima sei libero un giorno vorrei chiederti spiegazioni su un paio di cose

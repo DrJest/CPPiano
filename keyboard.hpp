@@ -40,6 +40,10 @@
       keyBoard* generate(int,int,QString="assets/default.keys",QString="a4",double=440.);
       keyBoard* sort();
       keyBoard* draw();
+
+    public slots:
+      void keyShiftEvent();
+
       
     protected:
       void keyPressEvent(QKeyEvent *);

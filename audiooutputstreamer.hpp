@@ -24,7 +24,7 @@
             	AudioOutputStreamer(int, Key*);
             	~AudioOutputStreamer();
             	void start();
-              void stop();
+                void stop();
 
         	public slots:
             	void slot_writeMoreData();
