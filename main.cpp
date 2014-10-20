@@ -48,8 +48,6 @@ int main(int argc, char *argv[])
     
     kb->generate(min,max,layoutFile);
     
-    std::cout << "Hello" << std::endl;
-    
     kb->draw();
     // set Height and Width of the main window
     int wHeight = 28 + (window->getToolbars() * 30) + ((keyBoard*)(window->getMainWidget()))->height();

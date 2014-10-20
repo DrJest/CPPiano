@@ -7,6 +7,7 @@
 ***/ 
 
 #include "mainWindow.hpp"
+#include "options.hpp"
 #include <QActionGroup>
 
 mainWindow::mainWindow(QWidget *parent)
@@ -17,7 +18,9 @@ mainWindow::mainWindow(QWidget *parent)
 //  Disegna l'opzione quit nella finestra, nella finestrella file
 mainWindow* mainWindow::defaultMenus()
 {
-    QMenu *file; 
+    QMenu *file;
+    options* opt = new options(this);
+
     QAction *UpOct = new QAction("Octave &Up", this);
     QAction *DownOct = new QAction("Octave &Down", this);
     QAction *quit = new QAction("&Quit", this);
@@ -43,16 +46,19 @@ mainWindow* mainWindow::defaultMenus()
     QActionGroup* layouts = new QActionGroup(edit);
     layouts->addAction(defaults);
     layouts->addAction(complete);
-    defaults->setChecked(true);
+
+    if(((keyBoard*) this->getMainWidget())->getLayout() == "assets/default.keys")
+      defaults->setChecked(true);
+    else if(((keyBoard*) this->getMainWidget())->getLayout() == "assets/complete.keys")
+      complete->setChecked(true);
+
     layouts->setExclusive(true);
 
     edit->addAction(defaults);
     edit->addAction(complete);
     
-    //connect(item1, SIGNAL(triggered()), someobject, (SLOT(item1slot()));
-    //connect(item2, SIGNAL(triggered()), someobject, (SLOT(item2slot()));
-    //connect(item3, SIGNAL(triggered()), someobject, (SLOT(item3slot()));
-
+    connect(defaults, SIGNAL(triggered()), opt, SLOT(setDefaultLayout()));
+    connect(complete, SIGNAL(triggered()), opt, SLOT(setCompleteLayout()));
     
     return this;
 }

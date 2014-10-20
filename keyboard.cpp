@@ -94,6 +94,9 @@ keyBoard* keyBoard::generate(int minO, int maxO, QString keyFile, QString genN, 
     return (new keyBoard());
   }
 
+  this->_layout = keyFile;
+
+  out << keyFile << "\n";
   QTextStream in(&file);
   int i;
   char* c;

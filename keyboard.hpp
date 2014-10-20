@@ -41,6 +41,22 @@
       keyBoard* sort();
       keyBoard* draw();
 
+      int getMinOct() {
+        return this->_minOctave;
+      }
+      int getMaxOct() {
+        return this->_maxOctave;
+      }
+      QString getGeNote() {
+        return this->_generatorNote;
+      }
+      double getGenFreq() {
+        return this->_generatorFreq;
+      }
+      QString getLayout() {
+        return this->_layout;
+      }
+
     public slots:
       void chOctEventUp();
       void chOctEventDown();
@@ -76,6 +92,8 @@
       
       QLabel* _topBar;
       
+      QString _layout = "";
+
       QVector<int> code;
       QVector<QString> K;
   };
