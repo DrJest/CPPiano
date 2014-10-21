@@ -35,38 +35,18 @@ mainWindow* mainWindow::defaultMenus()
     connect(DownOct, SIGNAL(triggered()), this->mainWidget, SLOT(chOctEventDown()));
     connect(quit, SIGNAL(triggered()), qApp, SLOT(quit())); 
 
+    QMenu *edit = menuBar()->addMenu("&Modifica");
 
-    QMenu *edit;
-    QAction *defaults = new QAction("Default", this);
-    QAction *complete = new QAction("Complete", this);
-    defaults->setCheckable(true);
-    complete->setCheckable(true);
-    edit = menuBar()->addMenu("&Modifica");
-
-    QActionGroup* layouts = new QActionGroup(edit);
-    layouts->addAction(defaults);
-    layouts->addAction(complete);
-
-    if(((keyBoard*) this->getMainWidget())->getLayout() == "assets/default.keys")
-      defaults->setChecked(true);
-    else if(((keyBoard*) this->getMainWidget())->getLayout() == "assets/complete.keys")
-      complete->setChecked(true);
-
-    layouts->setExclusive(true);
-
-    edit->addAction(defaults);
-    edit->addAction(complete);
-    
-    connect(defaults, SIGNAL(triggered()), opt, SLOT(setDefaultLayout()));
-    connect(complete, SIGNAL(triggered()), opt, SLOT(setCompleteLayout()));
-    
+    QAction *optLabel = new QAction("&Preferenze", this);
+    optLabel->setShortcut(Qt::Key_P | Qt::CTRL);
+    edit->addAction(optLabel);
+    connect(optLabel, SIGNAL(triggered()), opt, SLOT(spawnOptionsWindow()));
     return this;
 }
 
-mainWindowMenu* mainWindow::addMenu(QString label){
-  mainWindowMenu* m = new mainWindowMenu();
-  if(label != "")
-    this->menus.push_back(*m);
+QMenu* mainWindow::addMenu(QString label)
+{
+  QMenu* m = menuBar()->addMenu(label);
   return m;
 }
  
@@ -82,19 +62,7 @@ int mainWindow::getToolbars()
 
 mainWindow* mainWindow::draw() 
 {
-  if ( !this->menus.count() ) this->defaultMenus();
-    for (int i = 0; i < this->menus.size(); ++i) {
-        mainWindowMenu menu = this->menus.at(i);
-        QMenu* m;
-        m = menuBar()->addMenu(menu.label);
-        for (int j = 0; j < menu.items.size(); ++j) {
-          mainWindowMenuItem item = menu.items.at(j);
-          QAction* a = new QAction(item.label, this);
-          if(item.shortcut) 
-            a->setShortcut(item.shortcut);
-          m->addAction(a);
-        }
-    }  
+  this->defaultMenus();
   QMainWindow::setCentralWidget(this->mainWidget);
   return this;
 }

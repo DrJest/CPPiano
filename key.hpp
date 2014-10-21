@@ -7,6 +7,8 @@
   #include <QMouseEvent>
   #include "audiooutputstreamer.hpp"
 
+  class keyBoard;
+  
   class Key : public QPushButton
   {
     Q_OBJECT
@@ -27,6 +29,8 @@
       bool sharp();
       bool valid();
       
+      keyBoard* parent();
+
     protected:
       void mousePressEvent(QMouseEvent*);
     
@@ -42,7 +46,6 @@
       bool _playing = false;
 
       AudioOutputStreamer* _aOutput;
-
   };
 
 #endif

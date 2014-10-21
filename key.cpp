@@ -21,6 +21,7 @@ Key::Key(QString name, QWidget *parent)
 {
   // Uso le regex per accettare solo le note 
   name = name.left(3);
+  this->_parent = parent;
   if(!name.contains(QRegExp("[a-g][0-7][#]{0,1}")) && name!="c8") 
   {
     QTextStream out(stdout);
@@ -53,6 +54,11 @@ Key* Key::setFrequency(double f)
   this->_frequency = f;
   this->_aOutput = new AudioOutputStreamer(f, this);
   return this;
+}
+
+keyBoard* Key::parent()
+{
+  return (keyBoard*) this->_parent;
 }
 
 //Setta lo stile

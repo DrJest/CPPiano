@@ -14,33 +14,6 @@
   #include "keyboard.hpp"
   #include "options.hpp"
 
-
-
-struct mainWindowMenuItem
-{
-  QString label;
-  QString icoSrc = "";
-  QKeySequence shortcut = 0;
-  
-};
-
-class mainWindowMenu
-{
-  public:
-    mainWindowMenu() {};
-    
-    mainWindowMenu* addItem(mainWindowMenuItem item)
-    {
-      this->items.push_back(item);
-      this->itemsn++;
-      return this;
-    };
-    QString type;
-    QString label = "";
-    QVector<mainWindowMenuItem> items;
-    int itemsn; 
-};
-
   class mainWindow : public QMainWindow
   {
     Q_OBJECT
@@ -54,8 +27,8 @@ class mainWindowMenu
         return this->mainWidget;
       };
 
-      mainWindowMenu* addMenu(QString = "");
-      
+      QMenu* addMenu(QString = "");
+
       mainWindow* defaultMenus();
       mainWindow* draw();
       
@@ -64,8 +37,8 @@ class mainWindowMenu
 
     private:
       QWidget* mainWidget;
-      QVector<mainWindowMenu> menus;
-      QVector<mainWindowMenu> tbars;
+      QVector<QMenu*> menus;
+      QVector<QMenu*> tbars;
   };
   
 #endif

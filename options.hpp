@@ -13,6 +13,11 @@
   #include <QKeyEvent>
   #include <QMap>
   #include <QLabel>
+  #include <QTabWidget>
+  #include <QRadioButton>
+  #include <QVBoxLayout>
+  #include <QLineEdit>
+  #include <QGridLayout>
 
   class mainWindow;
   class keyBoard;
@@ -23,14 +28,18 @@
     public:
       options(QWidget*);
       ~options() {};
+      void setLayout(QString);
     
     public slots:
-      void setDefaultLayout();
-      void setCompleteLayout();
+      void spawnOptionsWindow();
+      void toggleLayoutCustomField(bool);
+      void saveOptions();
 
     private:
       mainWindow* _mainwindow;
       keyBoard* _keyboard;
+      QWidget* _cusLayoutFieldBox;
+      QWidget* _main;
   };
 
 #endif

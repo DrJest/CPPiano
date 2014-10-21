@@ -9,6 +9,7 @@
 
 #include "audiooutputstreamer.hpp"
 #include "key.hpp"
+#include "keyboard.hpp"
 
 //Creatore degli oggetti AudioOutputStreamer
 //che ereditano pubblicamente da QObject
@@ -57,6 +58,8 @@ AudioOutputStreamer::~AudioOutputStreamer()
 //Funzione che connette il canale audio  
 void AudioOutputStreamer::start()
 {
+	this->_timbre = _key->parent()->timbre();
+
 	//disconnetto per sicurezza
  	QObject::disconnect(_audio, SIGNAL(notify()), this, SLOT(slot_writeMoreData()));
 	//Quando ho un segnale di tipo notify() connetti me, attraverso slot_writeMoreData al canale audio.
@@ -72,7 +75,6 @@ void AudioOutputStreamer::start()
 	slot_writeMoreData();
 
 }
-
 
 //Funzione che stoppa l'audio
 void AudioOutputStreamer::stop()
@@ -98,11 +100,22 @@ void AudioOutputStreamer::slot_writeMoreData()
 
     	//riempio _buffer completamente con i valori di una funzione che mi fa il tono di un pianoforte.        	
     	short int value = 0;
+    	float v = 0.;
     	for (int IDSample=0; IDSample<nbBytes; ++IDSample) {
         	float time = (float)_IDWrittenSample * _delta_t;
-        	value = (signed char) ((float)(10.*sin(_omega*time)));
-        	//Piano (10.*(float)(sin(_omega*time)+0.2*sin(2*_omega*time)+0.25*sin(3*_omega*time)+0.1*sin(4*_omega*time)+0.1*sin(5*_omega*time)));
-        	//Violino (10.*(float)(sin(_omega*time)+sin(2*_omega*time)+0.45*sin(3*_omega*time)+0.5*sin(4*_omega*time)+sin(5*_omega*time)+0.02*sin(6*_omega*time)+0.025sin(7*_omega*time)+0.03sin(8*_omega*time)));
+        	switch(_timbre)
+        	{
+        		case 1: //piano
+        			v = (10.*(float)(sin(_omega*time)+0.2*sin(2*_omega*time)+0.25*sin(3*_omega*time)+0.1*sin(4*_omega*time)+0.1*sin(5*_omega*time)));
+        			break;
+        		case 2: //violino
+        			v = (10.*(float)(sin(_omega*time)+sin(2*_omega*time)+0.45*sin(3*_omega*time)+0.5*sin(4*_omega*time)+sin(5*_omega*time)+0.02*sin(6*_omega*time)+0.025*sin(7*_omega*time)+0.03*sin(8*_omega*time))); 
+        			break;
+        		default:
+        			v = (float)(10.*sin(_omega*time));
+        			break;
+        	}
+        	value = (signed char) v;
         	_buffer[IDSample] = value;
         	++_IDWrittenSample;
     	}

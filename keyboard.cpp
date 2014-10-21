@@ -74,13 +74,23 @@ void keyBoard::playNote(Key* note)
     out << note->name() << " ";
 }
 
-
 //stoppa la nota
 void keyBoard::stopNote(Key* note)
 {
   note->stop();
 }
 
+int keyBoard::timbre()
+{
+  return this->_timbre;
+}
+
+keyBoard* keyBoard::timbre(int t)
+{
+  if(t>0 && t<3)
+    this->_timbre = t;
+  return this;
+}
 
 // genera la tastiera
 keyBoard* keyBoard::generate(int minO, int maxO, QString keyFile, QString genN, double genF)
@@ -306,12 +316,9 @@ void keyBoard::keyReleaseEvent(QKeyEvent *event)
 }
 
 void keyBoard::chOctEventUp(){
-  QTextStream o(stdout);
-  o << _curOctave;
   this->_curOctave = _curOctave+1;
   if(_curOctave>_maxOctave) _curOctave = _maxOctave;
   this->updateTopBar();
-  o << _curOctave;
 }
 
 void keyBoard::chOctEventDown(){

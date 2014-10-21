@@ -40,6 +40,7 @@
             	float _omega;
             	signed char* _buffer;
             	int _sizeNolBuffer;
+                int _timbre;
                 Key* _key;
         };
         	

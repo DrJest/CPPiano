@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'audiooutputstreamer.hpp'
 **
-** Created: Mon Oct 20 14:43:51 2014
+** Created: Tue Oct 21 11:38:37 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.2)
 **
 ** WARNING! All changes made in this file will be lost!

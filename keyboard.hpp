@@ -40,6 +40,9 @@
       keyBoard* generate(int,int,QString="assets/default.keys",QString="a4",double=440.);
       keyBoard* sort();
       keyBoard* draw();
+      keyBoard* timbre(int);
+      int timbre();
+
 
       int getMinOct() {
         return this->_minOctave;
@@ -81,6 +84,8 @@
       int Xoffset = 0;
       int Yoffset = 0;
 
+      int _timbre = 1; //1 = pianoforte, 2 = violino
+
       int _curOctave;
       int _minOctave;
       int _maxOctave;
@@ -96,6 +101,7 @@
 
       QVector<int> code;
       QVector<QString> K;
+
   };
 
 #endif
