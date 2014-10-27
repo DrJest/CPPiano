@@ -34,12 +34,18 @@
       void spawnOptionsWindow();
       void toggleLayoutCustomField(bool);
       void saveOptions();
+      void setDefaultLayout(bool);
+      void setCompleteLayout(bool);
 
     private:
       mainWindow* _mainwindow;
       keyBoard* _keyboard;
       QWidget* _cusLayoutFieldBox;
       QWidget* _main;
+      QLineEdit* _timbre;
+
+      //a field for each option
+      QString _layout;
   };
 
 #endif

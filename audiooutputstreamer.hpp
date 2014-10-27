@@ -21,7 +21,7 @@
         	Q_OBJECT
 
         	public:
-            	AudioOutputStreamer(int, Key*);
+            	AudioOutputStreamer(double, Key*);
             	~AudioOutputStreamer();
             	void start();
                 void stop();
@@ -37,10 +37,11 @@
 
             	unsigned long _IDWrittenSample;
             	float _delta_t;
+                double _frequency;
             	float _omega;
             	signed char* _buffer;
             	int _sizeNolBuffer;
-                int _timbre;
+                float* _timbre;
                 Key* _key;
         };
         	

@@ -7,7 +7,6 @@
 ***/ 
 
 #include "mainWindow.hpp"
-#include "options.hpp"
 #include <QActionGroup>
 
 mainWindow::mainWindow(QWidget *parent)
@@ -18,29 +17,40 @@ mainWindow::mainWindow(QWidget *parent)
 //  Disegna l'opzione quit nella finestra, nella finestrella file
 mainWindow* mainWindow::defaultMenus()
 {
-    QMenu *file;
     options* opt = new options(this);
+    RecPlay * _rec = ((keyBoard*)getMainWidget())->_rec;
 
-    QAction *UpOct = new QAction("Octave &Up", this);
-    QAction *DownOct = new QAction("Octave &Down", this);
-    QAction *quit = new QAction("&Quit", this);
+    QTextStream out(stdout);
+    out << _rec;
+
+    QMenu* file = menuBar()->addMenu("&File");
+    QAction *quit = new QAction("&Quit", file);
     quit->setShortcut(Qt::Key_Q | Qt::CTRL);
-    file = menuBar()->addMenu("&File");
-
-    file->addAction(UpOct); 
-    file->addAction(DownOct); 
     file->addAction(quit);
-    
-    connect(UpOct, SIGNAL(triggered()), this->mainWidget, SLOT(chOctEventUp()));
-    connect(DownOct, SIGNAL(triggered()), this->mainWidget, SLOT(chOctEventDown()));
     connect(quit, SIGNAL(triggered()), qApp, SLOT(quit())); 
-
-    QMenu *edit = menuBar()->addMenu("&Modifica");
-
-    QAction *optLabel = new QAction("&Preferenze", this);
+    
+    QMenu *edit = menuBar()->addMenu("&Edit");
+    QAction *optLabel = new QAction("&Preferences", this);
     optLabel->setShortcut(Qt::Key_P | Qt::CTRL);
     edit->addAction(optLabel);
     connect(optLabel, SIGNAL(triggered()), opt, SLOT(spawnOptionsWindow()));
+
+    QMenu* octave = menuBar()->addMenu("&Octave");
+    QAction *UpOct = new QAction("Octave &Up", octave);
+    QAction *DownOct = new QAction("Octave &Down", octave);
+    octave->addAction(UpOct); 
+    octave->addAction(DownOct); 
+    connect(UpOct, SIGNAL(triggered()), this->mainWidget, SLOT(chOctEventUp()));
+    connect(DownOct, SIGNAL(triggered()), this->mainWidget, SLOT(chOctEventDown()));
+
+    QMenu* rec = menuBar()->addMenu("&Rec");
+    QAction* startRec = new QAction("Star&t",rec);
+    QAction* stopRec = new QAction("Sto&p",rec);
+    rec->addAction(startRec);
+    rec->addAction(stopRec);
+    connect(startRec, SIGNAL(triggered()), _rec, SLOT(startRec()));
+    connect(stopRec, SIGNAL(triggered()), _rec, SLOT(stopRec()));
+
     return this;
 }
 

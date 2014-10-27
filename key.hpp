@@ -6,6 +6,9 @@
   #include <QWidget>
   #include <QMouseEvent>
   #include "audiooutputstreamer.hpp"
+  #include "recplay.hpp"
+  #include <QTimer>
+  #include <chrono>
 
   class keyBoard;
   
@@ -21,8 +24,6 @@
       Key* setGeometry(int,int,int,int);
       Key* setFrequency(double);
       Key* setDefaultStyle();
-      void play();
-      void stop();
       
       QString name();
       double frequency();
@@ -31,9 +32,18 @@
       
       keyBoard* parent();
 
+      clock_t lastTriggered;
+      bool _playing = false;
+      QTimer* _timer;
+
+    public slots:
+      void play();
+      void stop();
+
     protected:
       void mousePressEvent(QMouseEvent*);
-    
+      void mouseReleaseEvent(QMouseEvent*);
+
     private:
       QString _name;
       QString _defaultStyle;
@@ -43,7 +53,8 @@
       bool _sharp = false;
       bool _valid = false;
 
-      bool _playing = false;
+      RecPlay* _rec;
+      std::chrono::high_resolution_clock::time_point _start;
 
       AudioOutputStreamer* _aOutput;
   };

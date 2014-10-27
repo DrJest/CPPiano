@@ -22,6 +22,7 @@ Key::Key(QString name, QWidget *parent)
   // Uso le regex per accettare solo le note 
   name = name.left(3);
   this->_parent = parent;
+  this->_rec = ((keyBoard*)parent)->_rec;
   if(!name.contains(QRegExp("[a-g][0-7][#]{0,1}")) && name!="c8") 
   {
     QTextStream out(stdout);
@@ -29,6 +30,9 @@ Key::Key(QString name, QWidget *parent)
     return;
   }
   
+  this->_timer = new QTimer(this);
+  connect(_timer, SIGNAL(timeout()), this, SLOT(stop()));
+
   //do il nome alla nota e ne setto la posizione nella finestra
   this->_name = name;
   this->setGeometry(0,0,0,0);
@@ -74,14 +78,19 @@ void Key::play()
   this->setStyleSheet("background-color:red");
   this->_aOutput->start();
   this->_playing = true;
+  _start = std::chrono::high_resolution_clock::now();
 }
 
 //Quando smetto di suonare, stoppo AudioOutputStreamer e risetto lo stile
 void Key::stop()
 {
+  if(_timer->isActive())
+    _timer->stop();
   this->setDefaultStyle();
   this->_aOutput->stop();
   this->_playing=false;
+
+  _rec->send(this, _start, std::chrono::high_resolution_clock::now());
 }
 
 //Ritorna la validita della nota
@@ -129,7 +138,17 @@ double Key::frequency()
 void Key::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton) {
+    //if(!_timer->isActive())
     ((keyBoard*)(this->_parent))->playNote(this);
+  } else {
+    QPushButton::mousePressEvent(event);
+  }
+}
+
+void Key::mouseReleaseEvent(QMouseEvent *event)
+{
+  if (event->button() == Qt::LeftButton) {
+    ((keyBoard*)(this->_parent))->stopNote(this);
   } else {
     QPushButton::mousePressEvent(event);
   }

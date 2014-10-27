@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'options.hpp'
 **
-** Created: Tue Oct 21 11:27:49 2014
+** Created: Mon Oct 27 12:16:06 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_options[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -34,6 +34,8 @@ static const uint qt_meta_data_options[] = {
        9,    8,    8,    8, 0x0a,
       30,    8,    8,    8, 0x0a,
       60,    8,    8,    8, 0x0a,
+      74,    8,    8,    8, 0x0a,
+      97,    8,    8,    8, 0x0a,
 
        0        // eod
 };
@@ -41,7 +43,8 @@ static const uint qt_meta_data_options[] = {
 static const char qt_meta_stringdata_options[] = {
     "options\0\0spawnOptionsWindow()\0"
     "toggleLayoutCustomField(bool)\0"
-    "saveOptions()\0"
+    "saveOptions()\0setDefaultLayout(bool)\0"
+    "setCompleteLayout(bool)\0"
 };
 
 void options::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -53,6 +56,8 @@ void options::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 0: _t->spawnOptionsWindow(); break;
         case 1: _t->toggleLayoutCustomField((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 2: _t->saveOptions(); break;
+        case 3: _t->setDefaultLayout((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 4: _t->setCompleteLayout((*reinterpret_cast< bool(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -90,9 +95,9 @@ int options::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 5;
     }
     return _id;
 }

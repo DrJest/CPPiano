@@ -10,11 +10,17 @@
 #include <QDesktopWidget>
 #include "key.hpp"
 #include "keyboard.hpp"
+#include <QTimer>
+#include "mainWindow.hpp"
 
 //Crea keyboard usando un QWidget (ossia mainwindow)
 keyBoard::keyBoard(QWidget *parent)
   : QWidget(parent)
 {
+  this->_rec = new RecPlay(this);
+  _timbre[0]=1.;
+  for(int i = 1; i<8; ++i)
+    _timbre[i]=0.;
 }
 //Setta le dimensioni dei tasti alterati e puliti
 keyBoard* keyBoard::setCKeyHeight(int h)
@@ -47,7 +53,10 @@ keyBoard* keyBoard::setKeyGeometry(int ch, int cw, int ah, int aw)
 //Aggiorna la topbar
 keyBoard* keyBoard::updateTopBar()
 {
-  this->_topBar->setText( "   Current Octave: "+QString::number(this->_curOctave)+" (Min: "+QString::number(this->_minOctave)+"; Max:"+QString::number(this->_maxOctave)+")" );
+    QTextStream out(stdout);
+    bool rc = _rec->recording();
+    out << ( rc ?" - Recording ":" - ");
+  this->_topBar->setText( "   Current Octave: "+QString::number(this->_curOctave)+" (Min: "+QString::number(this->_minOctave)+"; Max:"+QString::number(this->_maxOctave)+")" + ( rc ?" - Recording":"") );
   return this;  
 }
 
@@ -69,9 +78,7 @@ int keyBoard::height()
 //suona la nota e ne stampa il nome sul standard standard output
 void keyBoard::playNote(Key* note)
 {
-    note->play();
-    QTextStream out(stdout);
-    out << note->name() << " ";
+  note->play();
 }
 
 //stoppa la nota
@@ -80,33 +87,38 @@ void keyBoard::stopNote(Key* note)
   note->stop();
 }
 
-int keyBoard::timbre()
+float* keyBoard::timbre()
 {
   return this->_timbre;
 }
 
-keyBoard* keyBoard::timbre(int t)
+QString keyBoard::getTimbre()
 {
-  if(t>0 && t<3)
-    this->_timbre = t;
+  QString opt = "";
+  for(int i=0;i<7;++i) {
+    opt += QString::number(_timbre[i])+"-";
+  }
+  opt += QString::number(_timbre[7]);
+  return opt;
+}
+
+keyBoard* keyBoard::timbre(float* t)
+{
+  this->_timbre = t;
   return this;
 }
 
 // genera la tastiera
 keyBoard* keyBoard::generate(int minO, int maxO, QString keyFile, QString genN, double genF)
 {
-  //Prende un file in input
-  QTextStream out(stdout);
   QFile file(keyFile);
-
+  QTextStream out(stdout);
   if(!file.open(QIODevice::ReadOnly)) {
     out << "File not found";
     return (new keyBoard());
   }
 
   this->_layout = keyFile;
-
-  out << keyFile << "\n";
   QTextStream in(&file);
   int i;
   char* c;
@@ -130,7 +142,7 @@ keyBoard* keyBoard::generate(int minO, int maxO, QString keyFile, QString genN, 
   //Considero solo i primi tre caratteri di genN
   genN = genN.left(3);
   
-  //Se non contiene le cose giuste, butta via??
+  //Se non contiene le cose giuste, butta via
   if(!genN.contains(QRegExp("[a-g][1-8][#]{0,1}")) ) 
   {
     return this;
@@ -196,8 +208,6 @@ keyBoard* keyBoard::generate(int minO, int maxO, QString keyFile, QString genN, 
 keyBoard* keyBoard::draw() 
 {
   QDesktopWidget desktop;
-  QTextStream out(stdout);
-
   //Prendo la larghezza dell schermo
   int desktopWidth=desktop.geometry().width();
   if( this->_generated == false ) {
@@ -257,6 +267,7 @@ keyBoard* keyBoard::draw()
       left += this->cKeyWidth;
     }
     QLabel* fb = new QLabel(this);
+    fb->setMinimumWidth(500);
     this->_topBar = fb;
     this->updateTopBar();
   return this;
@@ -285,7 +296,6 @@ Key* keyBoard::getNoteByKeyCode(int keyCode)
 //Funzione che permette di alzare o abbassare l'ottava con ctrl e shift, e da playNote con le altre XD
 void keyBoard::keyPressEvent(QKeyEvent *event)
 {
-  QTextStream out(stdout);
   int KC = event->key();
 
   if(KC==Qt::Key_Control)
@@ -303,15 +313,22 @@ void keyBoard::keyPressEvent(QKeyEvent *event)
     this->updateTopBar();
     return;
   }
-
   Key* t = this->getNoteByKeyCode(KC);
-  if(t->valid()) playNote(t);
+  if(t->valid()) {
+    if(t->_timer->isActive()) 
+      return;
+    playNote(t);
+  }
 }
  
 void keyBoard::keyReleaseEvent(QKeyEvent *event)
 {
   Key* t = this->getNoteByKeyCode(event->key());
-  if(t->valid()) stopNote(t);
+  if(t->valid()) {
+    t->_timer->stop();
+    t->_timer->start(33);
+  }
+  QTextStream o(stdout);
   return;
 }
 

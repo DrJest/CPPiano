@@ -14,6 +14,7 @@
   #include <QMap>
   #include <QLabel>
   #include "key.hpp"
+  #include "recplay.hpp"
 
   class keyBoard : public QWidget
   {
@@ -40,9 +41,9 @@
       keyBoard* generate(int,int,QString="assets/default.keys",QString="a4",double=440.);
       keyBoard* sort();
       keyBoard* draw();
-      keyBoard* timbre(int);
-      int timbre();
-
+      keyBoard* timbre(float[]);
+      float* timbre();
+      QString getTimbre();
 
       int getMinOct() {
         return this->_minOctave;
@@ -59,6 +60,8 @@
       QString getLayout() {
         return this->_layout;
       }
+
+      RecPlay* _rec;
 
     public slots:
       void chOctEventUp();
@@ -84,7 +87,7 @@
       int Xoffset = 0;
       int Yoffset = 0;
 
-      int _timbre = 1; //1 = pianoforte, 2 = violino
+      float* _timbre = new float[8]; //1 = pianoforte, 2 = violino
 
       int _curOctave;
       int _minOctave;
@@ -101,7 +104,6 @@
 
       QVector<int> code;
       QVector<QString> K;
-
   };
 
 #endif

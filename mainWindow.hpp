@@ -13,6 +13,7 @@
   #include <QMap>
   #include "keyboard.hpp"
   #include "options.hpp"
+  #include "recplay.hpp"
 
   class mainWindow : public QMainWindow
   {

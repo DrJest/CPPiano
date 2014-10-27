@@ -7,6 +7,7 @@ options::options(QWidget* mw)
 {
 	this->_mainwindow = (mainWindow*) mw;
 	this->_keyboard = (keyBoard*) _mainwindow->getMainWidget();
+	this->_layout = _keyboard->getLayout();
 }
 
 void options::spawnOptionsWindow()
@@ -33,18 +34,21 @@ void options::spawnOptionsWindow()
 
 	QRadioButton *def = new QRadioButton("Default", layoutTab);
     layoutL->addWidget(def);
+    connect(def, SIGNAL(toggled(bool)), this, SLOT(setDefaultLayout(bool)));
 
 	QRadioButton *com = new QRadioButton("Complete", layoutTab);
     layoutL->addWidget(com);
+    connect(com, SIGNAL(toggled(bool)), this, SLOT(setCompleteLayout(bool)));
 
 	QRadioButton *cus = new QRadioButton("Custom", layoutTab);
     layoutL->addWidget(cus);
     connect(cus, SIGNAL(toggled(bool)), this, SLOT(toggleLayoutCustomField(bool)));
     
+    
     QWidget* cusFieldBox = new QWidget(layoutTab);
 	    QLabel* cusFieldLabel = new QLabel("\n\nInserisci il percorso assoluto \no relativo all'eseguibile",cusFieldBox);
 	    QLineEdit* cusField = new QLineEdit(cusFieldBox);
-	    cusField->setText(_keyboard->getLayout());
+	    cusField->setText(_layout);
 	    cusField->setMinimumWidth(240);
 	    this->_cusLayoutFieldBox = cusFieldBox;
     layoutL->addWidget(cusFieldBox);
@@ -53,15 +57,14 @@ void options::spawnOptionsWindow()
     // needed to reset stretch
    	layoutL->addWidget(new QLabel(""));
 
-	if(_keyboard->getLayout()=="assets/default.keys")
+	if(_layout=="assets/default.keys")
 		def->setChecked(true);
-	else if (_keyboard->getLayout()=="assets/complete.keys")
+	else if (_layout=="assets/complete.keys")
 		com->setChecked(true);
 	else {
 		cus->setChecked(true);
 		cusFieldBox->show();
 	}
-
 
     layoutTab->setLayout(layoutL);
     /*** END LAYOUT TAB ***/
@@ -75,6 +78,13 @@ void options::spawnOptionsWindow()
     timbreLabel->setMaximumHeight(20);
     timbreL->addWidget(timbreLabel);
 
+    QLineEdit* timbre = new QLineEdit(timbreTab);
+    this->_timbre = timbre;
+    timbreL->addWidget(timbre);
+    timbre->setText(_keyboard->getTimbre());
+    QLabel* timbrExplication = new QLabel("Inserisci nella casella la serie dei coefficenti che determinano il timbro.\nCiascun coefficente sara' assegnato all'armonica corrispondente. \nE.G. il violino e' determinato da:\n1-1-0.45-0.5-1-0.02-0.025-0.03\n E.G. il pianoforte e' dato da:\n1-0.2-0.25-0.1-0.1-0-0-0");
+    timbreL->addWidget(timbrExplication);
+/*
     QRadioButton* piano = new QRadioButton("Piano", timbreTab);
     timbreL->addWidget(piano);
 
@@ -87,7 +97,7 @@ void options::spawnOptionsWindow()
 		piano->setChecked(true);
 	else 
 		violin->setChecked(true);
-
+*/
     timbreTab->setLayout(timbreL);
     /*** END TIMBRE TAB ***/
 
@@ -106,7 +116,7 @@ void options::spawnOptionsWindow()
 }
 
 void options::toggleLayoutCustomField(bool checked) {
-	if(checked)
+	if(checked) 
 		_cusLayoutFieldBox->show();
 	else
 		_cusLayoutFieldBox->hide();
@@ -114,22 +124,40 @@ void options::toggleLayoutCustomField(bool checked) {
 
 void options::saveOptions()
 {
-
+	if(_cusLayoutFieldBox->isVisible ())
+		this->_layout = _cusLayoutFieldBox->findChild<QLineEdit*>()->text();
+	this->setLayout(this->_layout);
+	QStringList l = this->_timbre->text().split("-");
+	float* v = new float[8];
+	for (int i =0;i<8;++i){
+		v[i] = l.at(i).toFloat();
+	}
+	_keyboard->timbre(v);
 	_main->close();
 }
 
 void options::setLayout(QString layout)
 {
 	keyBoard* k = this->_keyboard = (keyBoard*) _mainwindow->getMainWidget();
-	keyBoard* n = new keyBoard(_mainwindow);
+	keyBoard* n = this->_keyboard = new keyBoard(_mainwindow);
 
 	n->generate(k->getMinOct(), k->getMaxOct(), layout, k->getGeNote(), k->getGenFreq());
 	n->draw();
 	_mainwindow->setMainWidget<keyBoard*>(n);
 	_mainwindow->setCentralWidget(n);
-	n->grabKeyboard();
+	//n->grabKeyboard();
 	
     int wHeight = 28 + (_mainwindow->getToolbars() * 30) + ((keyBoard*)(_mainwindow->getMainWidget()))->height();
     int wWidth  = ((keyBoard*)(_mainwindow->getMainWidget()))->width();
     _mainwindow->resize(wWidth, wHeight);
+}
+
+void options::setDefaultLayout(bool doit) {
+	if(doit)
+		this->_layout = "assets/default.keys";
+}
+
+void options::setCompleteLayout(bool doit) {
+	if(doit)
+		this->_layout = "assets/complete.keys";
 }
