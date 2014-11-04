@@ -36,6 +36,8 @@
       int getToolbars();
       int getMenus();
 
+    public slots:
+      void toggleEnable();
     private:
       QWidget* mainWidget;
       QVector<QMenu*> menus;

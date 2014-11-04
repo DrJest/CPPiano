@@ -55,8 +55,8 @@ keyBoard* keyBoard::updateTopBar()
 {
     QTextStream out(stdout);
     bool rc = _rec->recording();
-    out << ( rc ?" - Recording ":" - ");
-  this->_topBar->setText( "   Current Octave: "+QString::number(this->_curOctave)+" (Min: "+QString::number(this->_minOctave)+"; Max:"+QString::number(this->_maxOctave)+")" + ( rc ?" - Recording":"") );
+    bool pl = _rec->playing();
+  this->_topBar->setText( "   Current Octave: "+QString::number(this->_curOctave)+" (Min: "+QString::number(this->_minOctave)+"; Max:"+QString::number(this->_maxOctave)+")" + ( rc ?" - Recording":"") + ( pl ?" - Playing":"") );
   return this;  
 }
 
@@ -217,10 +217,11 @@ keyBoard* keyBoard::draw()
   int left = 0, top = 20;
   QString last = "";
   bool checked = false;
-
+  int c = 0;
     //Creo tastiera partendo dalle cNotes
     for( auto i : this->cNotes.keys()) //keys restituisce solo le chiavi, non il valore (qMap(chiave,valore))
     {
+      c++;
       Key* t = new Key(cNotes.value(i), this);
       this->_keys.push_back(t);
       t->setGeometry(left, top, this->cKeyWidth, this->cKeyHeight)->setFrequency(i);
@@ -233,7 +234,7 @@ keyBoard* keyBoard::draw()
       }
 
       //Se fino a tre note in più sono più largo dello schermo e se sono un si o un mi, vado a capo
-      if (left+3*this->cKeyWidth >= desktopWidth && (cNotes.value(i).left(1)=="e" || cNotes.value(i).left(1)=="b")) {
+      if (left+3*this->cKeyWidth >= desktopWidth && c < cNotes.size()-3 && (cNotes.value(i).left(1)=="e" || cNotes.value(i).left(1)=="b")) {
         //Aumeno l'Yoffset di uno
         Yoffset++;
         //E aumento l'Xoffset di left

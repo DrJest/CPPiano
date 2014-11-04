@@ -34,6 +34,7 @@
       void spawnOptionsWindow();
       void toggleLayoutCustomField(bool);
       void saveOptions();
+      void cusBrowse();
       void setDefaultLayout(bool);
       void setCompleteLayout(bool);
 

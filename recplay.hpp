@@ -8,6 +8,8 @@
   #include <QTimer>
   #include <chrono>
   #include <QMap>
+  #include <QPair>
+  #include <QAction>
 
   class keyBoard;
   class Key;
@@ -20,6 +22,7 @@
       RecPlay(QWidget*);
       ~RecPlay(){};
       bool recording();
+      bool playing();
       void send(Key*, std::chrono::high_resolution_clock::time_point,std::chrono::high_resolution_clock::time_point);
  
     public slots:
@@ -28,16 +31,24 @@
       void Play();
       void Pause();
       void Stop();
+      void PlayNextNote();
+      void Open();
+      void Save();
 
     protected:
 
     private:
-      void Open();
-      void Save();
+      QAction* _startRec;
+      QAction* _stopRec;
+      QAction* _startPlay;
+      QAction* _stopPlay;
       std::chrono::high_resolution_clock::time_point _start;
       bool _recording = false;
+      bool _playing = false;
       keyBoard* _kb;
-      QMap<Key*, double> _registration;
+      QMap<int, QPair<Key*, int>> _registration;
+      int _ms;
+      QTimer* _timer;
   };
 
 #endif

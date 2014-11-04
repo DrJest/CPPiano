@@ -19,11 +19,14 @@ mainWindow* mainWindow::defaultMenus()
 {
     options* opt = new options(this);
     RecPlay * _rec = ((keyBoard*)getMainWidget())->_rec;
-
     QTextStream out(stdout);
-    out << _rec;
 
     QMenu* file = menuBar()->addMenu("&File");
+    QAction *open = new QAction("&Open", file);
+    open->setShortcut(Qt::Key_O | Qt::CTRL);
+    file->addAction(open);
+    connect(open, SIGNAL(triggered()), _rec, SLOT(Open())); 
+
     QAction *quit = new QAction("&Quit", file);
     quit->setShortcut(Qt::Key_Q | Qt::CTRL);
     file->addAction(quit);
@@ -48,12 +51,29 @@ mainWindow* mainWindow::defaultMenus()
     QAction* stopRec = new QAction("Sto&p",rec);
     rec->addAction(startRec);
     rec->addAction(stopRec);
+    connect(startRec, SIGNAL(triggered()), this, SLOT(toggleEnable()));
+    connect(stopRec, SIGNAL(triggered()), this, SLOT(toggleEnable()));
     connect(startRec, SIGNAL(triggered()), _rec, SLOT(startRec()));
     connect(stopRec, SIGNAL(triggered()), _rec, SLOT(stopRec()));
 
+    QAction* start = new QAction("Play",rec);
+    QAction* stop = new QAction("Stop Playing",rec);
+    rec->addAction(start);
+    rec->addAction(stop);
+    connect(start, SIGNAL(triggered()), _rec, SLOT(Play()));
+    connect(stop, SIGNAL(triggered()), _rec, SLOT(Stop()));
+    
     return this;
 }
 
+void mainWindow::toggleEnable()
+{
+    QAction* o = QObject::sender();
+    if(o->isEnabled())
+	o->disable();
+    else
+	o->enable();
+}
 QMenu* mainWindow::addMenu(QString label)
 {
   QMenu* m = menuBar()->addMenu(label);

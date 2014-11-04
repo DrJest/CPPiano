@@ -1,7 +1,7 @@
 #include "options.hpp"
 #include "mainWindow.hpp"
 #include "keyboard.hpp"
-
+#include <QFileDialog>
 
 options::options(QWidget* mw)
 {
@@ -17,7 +17,7 @@ void options::spawnOptionsWindow()
 	QTabWidget* tabs = new QTabWidget(wdg);
 
 	tabs->setMinimumWidth(250);
-	tabs->setMinimumHeight(220);
+	tabs->setMinimumHeight(250);
 
     QGridLayout *optionsL = new QGridLayout();
     optionsL->addWidget(tabs, 0, 0, 2, 0, Qt::AlignTop);
@@ -46,10 +46,15 @@ void options::spawnOptionsWindow()
     
     
     QWidget* cusFieldBox = new QWidget(layoutTab);
-	    QLabel* cusFieldLabel = new QLabel("\n\nInserisci il percorso assoluto \no relativo all'eseguibile",cusFieldBox);
+    	QHBoxLayout* cusLayoutL = new QHBoxLayout();
 	    QLineEdit* cusField = new QLineEdit(cusFieldBox);
+	    QPushButton* cusFieldBrowse = new QPushButton("Browse");
+	    connect(cusFieldBrowse, SIGNAL(clicked()), this, SLOT(cusBrowse()));
 	    cusField->setText(_layout);
 	    cusField->setMinimumWidth(240);
+	    cusLayoutL->addWidget(cusField);
+	    cusLayoutL->addWidget(cusFieldBrowse);
+    	cusFieldBox->setLayout(cusLayoutL);
 	    this->_cusLayoutFieldBox = cusFieldBox;
     layoutL->addWidget(cusFieldBox);
    	cusFieldBox->hide();
@@ -134,6 +139,15 @@ void options::saveOptions()
 	}
 	_keyboard->timbre(v);
 	_main->close();
+}
+
+void options::cusBrowse()
+{
+	QString fileName = QFileDialog::getOpenFileName(this->_mainwindow, 
+													"Open File",
+                                                 	".",
+                                                 	"CPPiano Layout Files (*.keys)");
+	_cusLayoutFieldBox->findChild<QLineEdit*>()->setText(fileName);
 }
 
 void options::setLayout(QString layout)
