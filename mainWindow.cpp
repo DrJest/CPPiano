@@ -68,11 +68,11 @@ mainWindow* mainWindow::defaultMenus()
 
 void mainWindow::toggleEnable()
 {
-    QAction* o = QObject::sender();
+    QAction* o = (QAction*)QObject::sender();
     if(o->isEnabled())
-	o->disable();
+	o->setEnabled(false);
     else
-	o->enable();
+	o->setEnabled(true);
 }
 QMenu* mainWindow::addMenu(QString label)
 {
