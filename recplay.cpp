@@ -229,13 +229,15 @@ int RecPlay::status()
 		return 1; //Recording
 	if(_registration.isEmpty())
 		return 0; //Nothing to play
-	if(this->_paused)
+	if(this->_paused) {
 		if(_startRec->isEnabled())
 			return 2; //paused recording 
 		else
 			return 3; //paused play
+	}
 	if(playing())
 		return 4; //playing
+	return 0;
 }
 
 void RecPlay::send(Key* key, std::chrono::high_resolution_clock::time_point start, std::chrono::high_resolution_clock::time_point stop) {
