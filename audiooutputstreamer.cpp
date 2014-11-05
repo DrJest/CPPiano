@@ -38,7 +38,7 @@ AudioOutputStreamer::AudioOutputStreamer(double f, Key* key)
 
 	//inizializza un nuovo canale output
 	_audio = new QAudioOutput(format, this);
-	_audio->setNotifyInterval(50);
+	_audio->setNotifyInterval(10);
 	_audio->setBufferSize(32768);//in bytes
 
 	//costanti utili
