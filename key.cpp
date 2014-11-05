@@ -20,6 +20,8 @@ Key::Key(QString name, QWidget *parent)
   : QPushButton(name, parent)
 {
   // Uso le regex per accettare solo le note 
+  this->setCheckable(false);
+
   name = name.left(3);
   this->_parent = parent;
   this->_rec = ((keyBoard*)parent)->_rec;
@@ -46,6 +48,8 @@ Key::Key(QString name, QWidget *parent)
   } else {
     style = "background-color: white;color: black;";
   }
+
+  
   this->_defaultStyle = style;
   this->setStyleSheet(style);
   this->_valid = true;

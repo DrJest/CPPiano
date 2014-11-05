@@ -23,6 +23,7 @@
       ~RecPlay(){};
       bool recording();
       bool playing();
+      bool unsaved(){return this->_unsavedChanges;}
       void send(Key*, std::chrono::high_resolution_clock::time_point,std::chrono::high_resolution_clock::time_point);
       void setButtons(QAction*,QAction*,QAction*,QAction*,QAction*);
       void writeFile(QString);
@@ -53,6 +54,7 @@
       bool _recording = false;
       bool _playing = false;
       bool _paused = false;
+      bool _unsavedChanges = false;
       keyBoard* _kb;
       QMap<int, QPair<Key*, int>> _registration;
       int _ms = 0;

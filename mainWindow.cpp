@@ -13,18 +13,21 @@
 mainWindow::mainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    qApp->setStyleSheet("QPushButton:focus {outline: none}");
 }
 
 
 void mainWindow::closeEvent ( QCloseEvent * event )
 {  
-    event->ignore();        
-    if (QMessageBox::Yes == QMessageBox::question(this, "Close Confirmation?",
-                          "Are you sure you want to exit?", 
-                          QMessageBox::Yes|QMessageBox::No))
-    {
-        event->accept();
-        qApp->quit();
+    if(((keyBoard*)getMainWidget())->_rec->unsaved()) {
+        event->ignore();        
+        if (QMessageBox::Yes == QMessageBox::question(this, "Close Confirmation?",
+                              "Are you sure you want to exit?", 
+                              QMessageBox::Yes|QMessageBox::No))
+        {
+            event->accept();
+            qApp->quit();
+        }
     }
 }; 
 

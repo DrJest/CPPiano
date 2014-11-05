@@ -337,17 +337,18 @@ void keyBoard::keyPressEvent(QKeyEvent *event)
     return;
   }
 
-  if(KC==Qt::Key_Control)
+  if(KC==Qt::Key_Minus)
   {
     this->chOctEventDown();
     return;
   }
   
-  if(KC==Qt::Key_Shift)
+  if(KC==Qt::Key_Plus)
   {
     this->chOctEventUp();
     return;
   }
+  
   Key* t = this->getNoteByKeyCode(KC);
   if(t->valid()) {
     if(t->_timer->isActive()) 

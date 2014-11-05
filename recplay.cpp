@@ -21,7 +21,7 @@ void RecPlay::setButtons(QAction* b1, QAction* b2, QAction* b3, QAction* b4, QAc
 void RecPlay::startRec()
 {
 	//se l'utente ha gia' una registrazione chiedo se sovrascriverla
-	if(!this->_registration.isEmpty() && !this->_paused) 
+	if(!this->_registration.isEmpty() && !this->_paused && this->_unsavedChanges) 
 	{
 	  QMessageBox::StandardButton reply;
 	  reply = QMessageBox::question(this->_kb, "Test", "Unsaved recording will be deleted. Continue?",
@@ -50,7 +50,8 @@ void RecPlay::startRec()
 
 	this->_paused = false;
 	this->_recording = true;
-
+	this->_unsavedChanges = true;
+	
 	_kb->updateTopBar();
 	
 	this->_timer = new QTimer();
@@ -191,6 +192,7 @@ void RecPlay::Open() {
 
 	QString fName = fileName.split("/").last();
 	_kb->parent()->setWindowTitle(fName + " - CPPiano");
+	_unsavedChanges = false;
 }
 
 void RecPlay::Save() 
@@ -239,6 +241,7 @@ void RecPlay::writeFile(QString fileName)
 	}
 
 	_currentFile = fileName;
+	_unsavedChanges = false;
 	file.close();	
 }
 
