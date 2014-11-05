@@ -41,9 +41,9 @@ u    | int        | Upper Octave [1-7]
 
 ####GUI
 Most of keys [1-9][a-z] are reserved for keyboard mapping.
-+ and - change octave for key mapping
+`+` and `-` change octave for key mapping
 
-####Key Mapping
+#####Key Mapping
 2 key maps are included:
 - Default: maps in piano-position central line of the keyboard, from a(a of the previous octave) to p (c of the following one), With positioned sharp keys
 - Complete: maps 3 complete octaves from 1 (c of prev. octave) to m (c of the very following one)

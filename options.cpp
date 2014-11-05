@@ -89,22 +89,20 @@ void options::spawnOptionsWindow()
     timbre->setText(_keyboard->getTimbre());
     QLabel* timbrExplication = new QLabel("Inserisci nella casella la serie dei coefficenti che determinano il timbro.\nCiascun coefficente sara' assegnato all'armonica corrispondente. \nE.G. il violino e' determinato da:\n1-1-0.45-0.5-1-0.02-0.025-0.03\n E.G. il pianoforte e' dato da:\n1-0.2-0.25-0.1-0.1-0-0-0");
     timbreL->addWidget(timbrExplication);
-/*
-    QRadioButton* piano = new QRadioButton("Piano", timbreTab);
-    timbreL->addWidget(piano);
-
-    QRadioButton* violin = new QRadioButton("Violin", timbreTab);
-    timbreL->addWidget(violin);
-
-    timbreL->addWidget(new QLabel(""));
-
-	if(_keyboard->timbre()==1)
-		piano->setChecked(true);
-	else 
-		violin->setChecked(true);
-*/
     timbreTab->setLayout(timbreL);
     /*** END TIMBRE TAB ***/
+
+    /*** HELP TAB ***/
+    QWidget* helpTab = new QWidget(tabs);
+    tabs->addTab(helpTab, "Informations");
+    QVBoxLayout* helpL = new QVBoxLayout();
+    QLabel *helpLabel = new QLabel(keyBoard::Usage());
+    timbreLabel->setMinimumHeight(100);
+    helpL->addWidget(helpLabel);
+    helpTab->setLayout(helpL);
+    /*** END HELP TAB ***/
+
+
 
     // OK BUTTON
     QPushButton* ok = new QPushButton("OK", wdg);

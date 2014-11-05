@@ -48,6 +48,8 @@
       float* timbre();
       QString getTimbre();
 
+      static QString Usage();
+
       int getMinOct() {
         return this->_minOctave;
       }

@@ -318,6 +318,22 @@ Key* keyBoard::getNoteByName(QString name)
   return (new Key());
 }
 
+QString keyBoard::Usage() 
+{
+  return "CLI Arguments\n \
+    h  Prints help usage\n \
+    v  Prints version informations\n \
+    k  Loads a layout file for keyboard\n \
+    l  Lower Octave [1-7]\n \
+    u  Upper Octave [1-7]\n \
+    \n \
+GUI\n \
+    [1-9a-z] map keyboard\n \
+    +, - change octave\n\n \
+\
+    See more @ https://github.com/DrJest/CPPiano/";
+}
+
 //Funzione che permette di alzare o abbassare l'ottava con ctrl e shift, e da playNote con le altre XD
 void keyBoard::keyPressEvent(QKeyEvent *event)
 {

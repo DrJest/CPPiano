@@ -2,7 +2,7 @@
 #include <QWidget>
 #include <QIcon>
 #include <QString>
-
+#include <string>
 #include "mainWindow.hpp"
 #include "keyboard.hpp"
 #include <iostream> 
@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     QString layoutFile = "assets/default.keys";
     int opt;
     int min = 2, max = 5;
+    std::string usage = keyBoard::Usage().toUtf8().constData();
     while ( (opt = getopt(argc, argv, "hvk:b:t:")) != -1 ) {  
         switch ( opt ) {
             case 'v':
@@ -21,6 +22,7 @@ int main(int argc, char *argv[])
                 break;
             case 'h':
                 std::cout << "Usage:" << std::endl;
+                std::cout << usage << std::endl;
                 return 0;
                 break;
             case 'k':
