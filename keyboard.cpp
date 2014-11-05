@@ -18,6 +18,7 @@ keyBoard::keyBoard(QWidget *parent)
   : QWidget(parent)
 {
   this->_rec = new RecPlay(this);
+  this->_parent = parent;
   _timbre[0]=1.;
   for(int i = 1; i<8; ++i)
     _timbre[i]=0.;
@@ -206,7 +207,7 @@ keyBoard* keyBoard::generate(int minO, int maxO, QString keyFile, QString genN, 
  allNotes.push_back( "c"+QString::number(maxO+1) );
 
  int n = allNotes.indexOf(genN);
- double f, a = 1.05946309436; //Distanza in frequenza tra 2 note
+ double f, a = 1.05946309436; //Distanza in logaritmo in frequenza tra 2 note
  for(int i = 0; i<allNotes.size();++i) 
  {
   //Do' la frequenza giusta ad ogni nota
@@ -227,7 +228,7 @@ keyBoard* keyBoard::draw()
     this->generate(4, 4);
   }
 
-  int left = 0, top = 20;
+  int left = 0, top = 22;
   QString last = "";
   bool checked = false;
   int c = 0;
@@ -326,10 +327,6 @@ void keyBoard::keyPressEvent(QKeyEvent *event)
   {
     switch(_rec->status()) 
     {
-      case 0:
-      case 2:
-        _rec->startRec();
-        break;
       case 1:
       case 4:
         _rec->Pause();

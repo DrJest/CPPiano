@@ -59,7 +59,7 @@ void RecPlay::startRec()
 
 void RecPlay::stopRec() 
 {
-	if(!recording())
+	if(!recording() && !this->_paused)
 		return;
 	this->_startRec->setEnabled(true);
 	this->_stopRec->setEnabled(false);
@@ -151,6 +151,13 @@ void RecPlay::PlayNextNote()
 	}
 }
 
+void RecPlay::Clear() {
+	stopRec();
+	Stop();
+	_kb->parent()->setWindowTitle("CPPiano");
+	_registration.clear();
+}
+
 void RecPlay::Open() {
 	QString fileName = QFileDialog::getOpenFileName(0, 
 						"Open File",
@@ -180,9 +187,22 @@ void RecPlay::Open() {
 		_registration.insert(fields[2].toInt(), qMakePair(k, fields[3].toInt()));
 	}
 	stopRec();
+	_currentFile = fileName;
+
+	QString fName = fileName.split("/").last();
+	_kb->parent()->setWindowTitle(fName + " - CPPiano");
 }
 
-void RecPlay::Save() {
+void RecPlay::Save() 
+{
+	if(this->_currentFile=="") {
+		SaveAs();
+		return;
+	}
+	writeFile(_currentFile);
+}
+
+void RecPlay::SaveAs() {
 	if(_registration.isEmpty()) {
 		QMessageBox::information(0,"Error","No registration found. Nothing to save.");
 		return;
@@ -195,12 +215,20 @@ void RecPlay::Save() {
 	if(fileName.right(4)!=".crf")
 		fileName += ".crf";
 
+	writeFile(fileName);
+}
+
+void RecPlay::writeFile(QString fileName) 
+{
 	QFile file(fileName);
 	if(!file.open(QIODevice::WriteOnly)) {
 		QMessageBox::information(0,"Error",file.errorString());
 		return;
 	}
 	QTextStream out(&file);
+
+	QString fName = fileName.split("/").last();
+	_kb->parent()->setWindowTitle(fName + " - CPPiano");
 
 	for (auto i : _registration.keys())
 	{
@@ -210,7 +238,8 @@ void RecPlay::Save() {
 			<< _registration[i].second << "\n";
 	}
 
-	file.close();
+	_currentFile = fileName;
+	file.close();	
 }
 
 bool RecPlay::recording()  
@@ -225,10 +254,10 @@ bool RecPlay::playing()
 
 int RecPlay::status()
 {
+	if(_registration.isEmpty() && !recording())
+		return 0; //Nothing Recorded
 	if(recording())
 		return 1; //Recording
-	if(_registration.isEmpty())
-		return 0; //Nothing to play
 	if(this->_paused) {
 		if(_startRec->isEnabled())
 			return 2; //paused recording 

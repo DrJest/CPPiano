@@ -23,6 +23,8 @@
     public:
       keyBoard(QWidget* = 0);
       ~keyBoard() {};
+
+      QWidget* parent() {return _parent;}
       
       keyBoard* setCKeyWidth(int);
       keyBoard* setAKeyWidth(int);
@@ -105,6 +107,8 @@
 
       QVector<int> code;
       QVector<QString> K;
+
+      QWidget* _parent;
   };
 
 #endif

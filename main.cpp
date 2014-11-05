@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     
     kb->draw();
     // set Height and Width of the main window
-    int wHeight = 28 + (window->getToolbars() * 30) + ((keyBoard*)(window->getMainWidget()))->height();
+    int wHeight = 20 + (window->getToolbars() * 30) + ((keyBoard*)(window->getMainWidget()))->height();
     int wWidth  = ((keyBoard*)(window->getMainWidget()))->width();
     
     //centering the window

@@ -25,6 +25,7 @@
       bool playing();
       void send(Key*, std::chrono::high_resolution_clock::time_point,std::chrono::high_resolution_clock::time_point);
       void setButtons(QAction*,QAction*,QAction*,QAction*,QAction*);
+      void writeFile(QString);
       int status();
 
     public slots:
@@ -34,8 +35,10 @@
       void Pause();
       void Stop();
       void PlayNextNote();
+      void Clear();
       void Open();
       void Save();
+      void SaveAs();
 
     protected:
 
@@ -54,6 +57,7 @@
       QMap<int, QPair<Key*, int>> _registration;
       int _ms = 0;
       QTimer* _timer;
+      QString _currentFile;
   };
 
 #endif

@@ -33,6 +33,12 @@ mainWindow* mainWindow::defaultMenus()
     file->addAction(save);
     connect(save, SIGNAL(triggered()), _rec, SLOT(Save())); 
 
+    QAction* saveas = new QAction("Save &As", file);
+    saveas->setShortcut(Qt::Key_S | Qt::CTRL | Qt::ShiftModifier);
+    file->addAction(saveas);
+    connect(saveas, SIGNAL(triggered()), _rec, SLOT(SaveAs())); 
+
+
     QAction *quit = new QAction("&Quit", file);
     quit->setShortcut(Qt::Key_Q | Qt::CTRL);
     file->addAction(quit);
@@ -55,6 +61,8 @@ mainWindow* mainWindow::defaultMenus()
     QMenu* rec = menuBar()->addMenu("&Rec");
     QAction* startRec = new QAction("Start Recording",rec);
     QAction* stopRec = new QAction("Stop Recording",rec);
+    startRec->setShortcut(Qt::Key_R | Qt::CTRL);
+    stopRec->setShortcut(Qt::Key_R | Qt::ShiftModifier);
     rec->addAction(startRec);
     rec->addAction(stopRec);
     connect(startRec, SIGNAL(triggered()), _rec, SLOT(startRec()));
@@ -66,10 +74,16 @@ mainWindow* mainWindow::defaultMenus()
     
     QAction* start = new QAction("Play",rec);
     QAction* stop = new QAction("Stop",rec);
+    stop->setShortcut(Qt::Key_Period | Qt::CTRL);
     rec->addAction(start);
     rec->addAction(stop);
     connect(start, SIGNAL(triggered()), _rec, SLOT(Play()));
     connect(stop, SIGNAL(triggered()), _rec, SLOT(Stop()));
+
+    QAction* clear = new QAction("Clear",rec);
+    clear->setShortcut(Qt::Key_C | Qt::CTRL);
+    rec->addAction(clear);
+    connect(clear, SIGNAL(triggered()), _rec, SLOT(Clear()));
 
     _rec->setButtons(startRec,stopRec,pause,start,stop);
 
@@ -79,12 +93,6 @@ mainWindow* mainWindow::defaultMenus()
     stopRec->setEnabled(false);
 
     return this;
-}
-
-QMenu* mainWindow::addMenu(QString label)
-{
-  QMenu* m = menuBar()->addMenu(label);
-  return m;
 }
  
 int mainWindow::getMenus()

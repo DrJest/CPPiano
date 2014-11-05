@@ -28,8 +28,6 @@
         return this->mainWidget;
       };
 
-      QMenu* addMenu(QString = "");
-
       mainWindow* defaultMenus();
       mainWindow* draw();
       
