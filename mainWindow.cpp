@@ -62,18 +62,23 @@ mainWindow* mainWindow::defaultMenus()
     connect(quit, SIGNAL(triggered()), this, SLOT(close())); 
     
     QMenu *edit = menuBar()->addMenu("&Edit");
+
+    QAction *UpOct = new QAction("Octave &Up", edit);
+    QAction *DownOct = new QAction("Octave &Down", edit);
+
+    edit->addAction(UpOct); 
+    edit->addAction(DownOct); 
+    connect(UpOct, SIGNAL(triggered()), this->mainWidget, SLOT(chOctEventUp()));
+    connect(DownOct, SIGNAL(triggered()), this->mainWidget, SLOT(chOctEventDown()));
+    
+    QAction *octaveSep = new QAction(edit);
+    octaveSep->setSeparator(true);
+    edit->addAction(octaveSep);
+
     QAction *optLabel = new QAction("&Preferences", this);
     optLabel->setShortcut(Qt::Key_P | Qt::CTRL);
     edit->addAction(optLabel);
     connect(optLabel, SIGNAL(triggered()), opt, SLOT(spawnOptionsWindow()));
-
-    QMenu* octave = menuBar()->addMenu("&Octave");
-    QAction *UpOct = new QAction("Octave &Up", octave);
-    QAction *DownOct = new QAction("Octave &Down", octave);
-    octave->addAction(UpOct); 
-    octave->addAction(DownOct); 
-    connect(UpOct, SIGNAL(triggered()), this->mainWidget, SLOT(chOctEventUp()));
-    connect(DownOct, SIGNAL(triggered()), this->mainWidget, SLOT(chOctEventDown()));
 
     QMenu* rec = menuBar()->addMenu("&Rec");
     QAction* startRec = new QAction("Start Recording",rec);
