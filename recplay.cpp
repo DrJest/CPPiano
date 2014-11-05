@@ -50,7 +50,9 @@ void RecPlay::startRec()
 
 	this->_paused = false;
 	this->_recording = true;
+
 	_kb->updateTopBar();
+	
 	this->_timer = new QTimer();
 	connect(this->_timer, SIGNAL(timeout()), this, SLOT(PlayNextNote()));
 }
@@ -223,10 +225,10 @@ bool RecPlay::playing()
 
 int RecPlay::status()
 {
-	if(_registration.isEmpty())
-		return 0; //Nothing to play
 	if(recording())
 		return 1; //Recording
+	if(_registration.isEmpty())
+		return 0; //Nothing to play
 	if(this->_paused)
 		if(_startRec->isEnabled())
 			return 2; //paused recording 
