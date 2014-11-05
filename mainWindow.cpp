@@ -8,11 +8,25 @@
 
 #include "mainWindow.hpp"
 #include <QActionGroup>
+#include <QMessageBox>
 
 mainWindow::mainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
 }
+
+
+void mainWindow::closeEvent ( QCloseEvent * event )
+{  
+    event->ignore();        
+    if (QMessageBox::Yes == QMessageBox::question(this, "Close Confirmation?",
+                          "Are you sure you want to exit?", 
+                          QMessageBox::Yes|QMessageBox::No))
+    {
+        event->accept();
+        qApp->quit();
+    }
+}; 
 
 //  Disegna l'opzione quit nella finestra, nella finestrella file
 mainWindow* mainWindow::defaultMenus()
@@ -42,7 +56,7 @@ mainWindow* mainWindow::defaultMenus()
     QAction *quit = new QAction("&Quit", file);
     quit->setShortcut(Qt::Key_Q | Qt::CTRL);
     file->addAction(quit);
-    connect(quit, SIGNAL(triggered()), qApp, SLOT(quit())); 
+    connect(quit, SIGNAL(triggered()), this, SLOT(close())); 
     
     QMenu *edit = menuBar()->addMenu("&Edit");
     QAction *optLabel = new QAction("&Preferences", this);

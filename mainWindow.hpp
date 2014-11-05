@@ -34,6 +34,8 @@
       int getToolbars();
       int getMenus();
 
+      void closeEvent(QCloseEvent*);
+
     private:
       QWidget* mainWidget;
       QVector<QMenu*> menus;
