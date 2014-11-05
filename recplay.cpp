@@ -186,6 +186,10 @@ void RecPlay::Save() {
 		return;
 	}
 	QString fileName = QFileDialog::getSaveFileName(0, "Save As", "", "CPPiano Recorded Files (*.crf)");
+	if(fileName=="") {
+		QMessageBox::information(0,"Error","No filename specified.");
+		return;
+	}
 	if(fileName.right(4)!=".crf")
 		fileName += ".crf";
 
