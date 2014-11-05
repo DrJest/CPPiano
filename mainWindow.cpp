@@ -22,10 +22,16 @@ mainWindow* mainWindow::defaultMenus()
     QTextStream out(stdout);
 
     QMenu* file = menuBar()->addMenu("&File");
+
     QAction *open = new QAction("&Open", file);
     open->setShortcut(Qt::Key_O | Qt::CTRL);
     file->addAction(open);
     connect(open, SIGNAL(triggered()), _rec, SLOT(Open())); 
+
+    QAction *save = new QAction("&Save", file);
+    save->setShortcut(Qt::Key_S | Qt::CTRL);
+    file->addAction(save);
+    connect(save, SIGNAL(triggered()), _rec, SLOT(Save())); 
 
     QAction *quit = new QAction("&Quit", file);
     quit->setShortcut(Qt::Key_Q | Qt::CTRL);
@@ -47,33 +53,34 @@ mainWindow* mainWindow::defaultMenus()
     connect(DownOct, SIGNAL(triggered()), this->mainWidget, SLOT(chOctEventDown()));
 
     QMenu* rec = menuBar()->addMenu("&Rec");
-    QAction* startRec = new QAction("Star&t",rec);
-    QAction* stopRec = new QAction("Sto&p",rec);
+    QAction* startRec = new QAction("Start Recording",rec);
+    QAction* stopRec = new QAction("Stop Recording",rec);
     rec->addAction(startRec);
     rec->addAction(stopRec);
-    connect(startRec, SIGNAL(triggered()), this, SLOT(toggleEnable()));
-    connect(stopRec, SIGNAL(triggered()), this, SLOT(toggleEnable()));
     connect(startRec, SIGNAL(triggered()), _rec, SLOT(startRec()));
     connect(stopRec, SIGNAL(triggered()), _rec, SLOT(stopRec()));
 
+    QAction* pause = new QAction("Pause", rec);
+    rec->addAction(pause);
+    connect(pause, SIGNAL(triggered()), _rec, SLOT(Pause()));
+    
     QAction* start = new QAction("Play",rec);
-    QAction* stop = new QAction("Stop Playing",rec);
+    QAction* stop = new QAction("Stop",rec);
     rec->addAction(start);
     rec->addAction(stop);
     connect(start, SIGNAL(triggered()), _rec, SLOT(Play()));
     connect(stop, SIGNAL(triggered()), _rec, SLOT(Stop()));
-    
+
+    _rec->setButtons(startRec,stopRec,pause,start,stop);
+
+    start->setEnabled(false);
+    stop->setEnabled(false);
+    pause->setEnabled(false);
+    stopRec->setEnabled(false);
+
     return this;
 }
 
-void mainWindow::toggleEnable()
-{
-    QAction* o = (QAction*)QObject::sender();
-    if(o->isEnabled())
-	o->setEnabled(false);
-    else
-	o->setEnabled(true);
-}
 QMenu* mainWindow::addMenu(QString label)
 {
   QMenu* m = menuBar()->addMenu(label);

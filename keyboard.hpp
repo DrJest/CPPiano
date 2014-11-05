@@ -37,6 +37,7 @@
       void playNote(Key*);
       void stopNote(Key*);
       Key* getNoteByKeyCode(int);
+      Key* getNoteByName(QString);
       
       keyBoard* generate(int,int,QString="assets/default.keys",QString="a4",double=440.);
       keyBoard* sort();

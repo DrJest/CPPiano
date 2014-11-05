@@ -53,10 +53,23 @@ keyBoard* keyBoard::setKeyGeometry(int ch, int cw, int ah, int aw)
 //Aggiorna la topbar
 keyBoard* keyBoard::updateTopBar()
 {
-    QTextStream out(stdout);
-    bool rc = _rec->recording();
-    bool pl = _rec->playing();
-  this->_topBar->setText( "   Current Octave: "+QString::number(this->_curOctave)+" (Min: "+QString::number(this->_minOctave)+"; Max:"+QString::number(this->_maxOctave)+")" + ( rc ?" - Recording":"") + ( pl ?" - Playing":"") );
+  QString status = "";
+  switch(_rec->status()) 
+  {
+    case 1:
+      status = " - Recording";
+      break;
+    case 2:
+      status = " - Recording (P)";
+      break;
+    case 3:
+      status = " - Playing (P)";
+      break;
+    case 4:
+      status = " - Playing";
+      break;
+  }
+  this->_topBar->setText( "   Current Octave: "+QString::number(this->_curOctave)+" (Min: "+QString::number(this->_minOctave)+"; Max:"+QString::number(this->_maxOctave)+")" + status );
   return this;  
 }
 
@@ -284,7 +297,7 @@ Key* keyBoard::getNoteByKeyCode(int keyCode)
   int index = code.indexOf(keyCode);
   QString note = K.at(index);
   
-  // sostituisce la regex PCS con l'ottava corrente -1,+0,+1
+  // sostituisce la regex $P,$C o $S con l'ottava corrente -1,+0,+1
   note = note.replace("$c",QString::number(cur)).replace("$p",QString::number(cur-1)).replace("$n",QString::number(cur+1));
 
   for (int i= 0; i< this->_keys.size(); ++i)
@@ -294,24 +307,48 @@ Key* keyBoard::getNoteByKeyCode(int keyCode)
   return (new Key());
 }
 
+//prende un tasto dalla tastiera a partire dal nome (se presente)
+Key* keyBoard::getNoteByName(QString name)
+{
+  for (int i = 0; i< this->_keys.size(); ++i)
+  {
+    if(name==this->_keys.at(i)->name()) { return this->_keys.at(i); }
+  }
+  return (new Key());
+}
+
 //Funzione che permette di alzare o abbassare l'ottava con ctrl e shift, e da playNote con le altre XD
 void keyBoard::keyPressEvent(QKeyEvent *event)
 {
   int KC = event->key();
 
+  if(KC == 46) 
+  {
+    switch(_rec->status()) 
+    {
+      case 0:
+      case 2:
+        _rec->startRec();
+        break;
+      case 1:
+      case 4:
+        _rec->Pause();
+        break;
+      default:
+        _rec->Play();
+    }
+    return;
+  }
+
   if(KC==Qt::Key_Control)
   {
-    _curOctave = _curOctave-1;
-    if(_curOctave<_minOctave) _curOctave = _minOctave;
-    this->updateTopBar();
+    this->chOctEventDown();
     return;
   }
   
   if(KC==Qt::Key_Shift)
   {
-    this->_curOctave = _curOctave+1;
-    if(_curOctave>_maxOctave) _curOctave = _maxOctave;
-    this->updateTopBar();
+    this->chOctEventUp();
     return;
   }
   Key* t = this->getNoteByKeyCode(KC);
@@ -329,7 +366,6 @@ void keyBoard::keyReleaseEvent(QKeyEvent *event)
     t->_timer->stop();
     t->_timer->start(33);
   }
-  QTextStream o(stdout);
   return;
 }
 

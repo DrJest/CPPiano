@@ -24,7 +24,9 @@
       bool recording();
       bool playing();
       void send(Key*, std::chrono::high_resolution_clock::time_point,std::chrono::high_resolution_clock::time_point);
- 
+      void setButtons(QAction*,QAction*,QAction*,QAction*,QAction*);
+      int status();
+
     public slots:
       void startRec();
       void stopRec();
@@ -40,14 +42,17 @@
     private:
       QAction* _startRec;
       QAction* _stopRec;
+      QAction* _pause;
       QAction* _startPlay;
       QAction* _stopPlay;
       std::chrono::high_resolution_clock::time_point _start;
+      std::chrono::high_resolution_clock::time_point _pausedAt;
       bool _recording = false;
       bool _playing = false;
+      bool _paused = false;
       keyBoard* _kb;
       QMap<int, QPair<Key*, int>> _registration;
-      int _ms;
+      int _ms = 0;
       QTimer* _timer;
   };
 
