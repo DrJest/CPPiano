@@ -2,6 +2,7 @@
 #include "mainWindow.hpp"
 #include "keyboard.hpp"
 #include <QFileDialog>
+#include <QShortcut>
 
 options::options(QWidget* mw)
 {
@@ -74,21 +75,22 @@ void options::spawnOptionsWindow()
     layoutTab->setLayout(layoutL);
     /*** END LAYOUT TAB ***/
 
-
     /*** TIMBRE TAB ***/
     QWidget* timbreTab = new QWidget(tabs);
     tabs->addTab(timbreTab, "Timbre");
-    QVBoxLayout* timbreL = new QVBoxLayout();
     QLabel *timbreLabel = new QLabel("Choose Timbre");
-    timbreLabel->setMaximumHeight(20);
-    timbreL->addWidget(timbreLabel);
-
     QLineEdit* timbre = new QLineEdit(timbreTab);
     this->_timbre = timbre;
-    timbreL->addWidget(timbre);
     timbre->setText(_keyboard->getTimbre());
     QLabel* timbrExplication = new QLabel("Inserisci nella casella la serie dei coefficenti che determinano il timbro.\nCiascun coefficente sara' assegnato all'armonica corrispondente. \nE.G. il violino e' determinato da:\n1-1-0.45-0.5-1-0.02-0.025-0.03\n E.G. il pianoforte e' dato da:\n1-0.2-0.25-0.1-0.1-0-0-0");
+    timbrExplication->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    
+    QVBoxLayout* timbreL = new QVBoxLayout();
+    timbreL->addWidget(timbreLabel);
+    timbreL->addWidget(timbre);
     timbreL->addWidget(timbrExplication);
+    timbreL->addStretch();
+
     timbreTab->setLayout(timbreL);
     /*** END TIMBRE TAB ***/
 
@@ -97,7 +99,6 @@ void options::spawnOptionsWindow()
     tabs->addTab(helpTab, "Informations");
     QVBoxLayout* helpL = new QVBoxLayout();
     QLabel *helpLabel = new QLabel(keyBoard::Usage());
-    timbreLabel->setMinimumHeight(100);
     helpL->addWidget(helpLabel);
     helpTab->setLayout(helpL);
     /*** END HELP TAB ***/
@@ -113,6 +114,7 @@ void options::spawnOptionsWindow()
     QPushButton* canc = new QPushButton("Cancel", wdg);
     optionsL->addWidget(canc,2,3);
     connect(canc, SIGNAL(clicked()), wdg, SLOT(close()));
+    new QShortcut(Qt::Key_Escape, wdg, SLOT(close()));
 
     wdg->setLayout(optionsL);
 	wdg->show();

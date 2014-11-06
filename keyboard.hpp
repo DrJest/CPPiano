@@ -67,6 +67,7 @@
       }
 
       RecPlay* rec();
+      void setKeyLetters();
 
     public slots:
       void chOctEventUp();
@@ -107,6 +108,7 @@
       
       QString _layout = "";
 
+      QVector<QString> letters;
       QVector<int> code;
       QVector<QString> K;
 

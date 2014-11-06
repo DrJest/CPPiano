@@ -152,6 +152,7 @@ keyBoard* keyBoard::generate(int minO, int maxO, QString keyFile, QString genN, 
     i = c[0] - (fields[0].contains(*(new QRegExp("[0-9]")))?0:32);
     //metto nel vettore code i keycode
     code.push_back(i);
+    letters.push_back(fields[0]);
     //e nel vettore K le note
     K.push_back(fields[1]);
   }
@@ -290,7 +291,29 @@ keyBoard* keyBoard::draw()
     fb->setMinimumWidth(500);
     this->_topBar = fb;
     this->updateTopBar();
+
+  setKeyLetters();
   return this;
+}
+
+void keyBoard::setKeyLetters(){
+  int cur = this->_curOctave;
+  QTextStream o(stdout);
+  for (int j= 0; j< this->_keys.size(); ++j)
+      this->_keys.at(j)->setText("\n\n"+this->_keys.at(j)->name());
+  for(int i = 0; i < code.size(); ++i)
+  {
+
+    QString note = K.at(i);
+    note = note.replace("$c",QString::number(cur)).replace("$p",QString::number(cur-1)).replace("$n",QString::number(cur+1));
+    for (int j= 0; j< this->_keys.size(); ++j)
+    {
+      if(note==this->_keys.at(j)->name()) 
+      { 
+        this->_keys.at(j)->setText("\n\n"+_keys.at(j)->name()+"\n("+letters[i]+")");
+      }
+    }
+  }
 }
 
 //funzione che prende il keycode e lo trasforma in note utilizzabili
@@ -334,7 +357,9 @@ QString keyBoard::Usage()
     \n \
 GUI\n \
     [1-9a-z] map keyboard\n \
-    +, - change octave\n\n \
+    +, = raise octave\n \
+    - decrease octave\n \
+    . play / pause\n\n\
 \
     See more @ https://github.com/DrJest/CPPiano/";
 }
@@ -364,7 +389,8 @@ void keyBoard::keyPressEvent(QKeyEvent *event)
     return;
   }
   
-  if(KC==Qt::Key_Plus)
+  //for both EU and US keyboards
+  if(KC==Qt::Key_Plus || KC==Qt::Key_Equal)
   {
     this->chOctEventUp();
     return;
@@ -392,10 +418,12 @@ void keyBoard::chOctEventUp(){
   this->_curOctave = _curOctave+1;
   if(_curOctave>_maxOctave) _curOctave = _maxOctave;
   this->updateTopBar();
+  setKeyLetters();
 }
 
 void keyBoard::chOctEventDown(){
   this->_curOctave = _curOctave-1;
   if(_curOctave<_minOctave) _curOctave = _minOctave;
   this->updateTopBar();
+  setKeyLetters();
 }

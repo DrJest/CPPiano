@@ -17,7 +17,7 @@ Key::Key()
 }
 
 Key::Key(QString name, QWidget *parent)
-  : QPushButton(name, parent)
+  : QPushButton("\n\n"+name, parent)
 {
   // Uso le regex per accettare solo le note 
   this->setCheckable(false);
