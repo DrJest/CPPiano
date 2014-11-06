@@ -44,8 +44,8 @@
       keyBoard* generate(int,int,QString="assets/default.keys",QString="a4",double=440.);
       keyBoard* sort();
       keyBoard* draw();
-      keyBoard* timbre(float[]);
-      float* timbre();
+      keyBoard* timbre(QString);
+      QVector<double> timbre();
       QString getTimbre();
 
       static QString Usage();
@@ -93,7 +93,7 @@
       int Xoffset = 0;
       int Yoffset = 0;
 
-      float* _timbre = new float[8]; //1 = pianoforte, 2 = violino
+      QVector<double> _timbre;
 
       int _curOctave;
       int _minOctave;

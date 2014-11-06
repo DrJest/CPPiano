@@ -58,7 +58,7 @@
       bool _paused = false;
       bool _unsavedChanges = false;
       mainWindow* _mw;
-      QMap<int, QPair<Key*, int>> _registration;
+      QMap<int, QPair<QString, int>> _registration;
       int _ms = 0;
       QTimer* _timer;
       QString _currentFile;

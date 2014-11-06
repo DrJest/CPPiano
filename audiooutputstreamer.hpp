@@ -41,7 +41,7 @@
             	float _omega;
             	signed char* _buffer;
             	int _sizeNolBuffer;
-                float* _timbre;
+                QVector<double> _timbre;
                 Key* _key;
         };
         	

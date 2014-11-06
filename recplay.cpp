@@ -146,7 +146,7 @@ void RecPlay::PlayNextNote()
 	}
 	if(_registration.contains(this->_ms))
 	{
-		Key* k = _registration[this->_ms].first;
+		Key* k = kb()->getNoteByName(_registration[this->_ms].first);
 		int duration = _registration[this->_ms].second;
 		k->play();
 		QTimer::singleShot(duration, k, SLOT(stop()));
@@ -191,7 +191,7 @@ void RecPlay::Open() {
 			k = new Key(fields[0], kb());
 			k->setFrequency(fields[1].toDouble());
 		}
-		_registration.insert(fields[2].toInt(), qMakePair(k, fields[3].toInt()));
+		_registration.insert(fields[2].toInt(), qMakePair(k->name(), fields[3].toInt()));
 	}
 	stopRec();
 	_currentFile = fileName;
@@ -240,8 +240,9 @@ void RecPlay::writeFile(QString fileName)
 
 	for (auto i : _registration.keys())
 	{
-		out << _registration[i].first->name() << " " 
-			<< _registration[i].first->frequency() << " " 
+		Key* k = kb()->getNoteByName(_registration[i].first);
+		out << k->name() << " " 
+			<< k->frequency() << " " 
 			<< i << " " 
 			<< _registration[i].second << "\n";
 	}
@@ -285,5 +286,5 @@ void RecPlay::send(Key* key, std::chrono::high_resolution_clock::time_point star
 	std::chrono::duration<double,std::milli> stop_relative = stop - _start;
 	int tstart = start_relative.count();
 	int tduration = stop_relative.count() - start_relative.count();
-	_registration.insert(tstart, qMakePair(key, tduration));
+	_registration.insert(tstart, qMakePair(key->name(), tduration));
 }

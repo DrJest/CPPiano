@@ -132,12 +132,7 @@ void options::saveOptions()
 	if(_cusLayoutFieldBox->isVisible ())
 		this->_layout = _cusLayoutFieldBox->findChild<QLineEdit*>()->text();
 	this->setLayout(this->_layout);
-	QStringList l = this->_timbre->text().split("-");
-	float* v = new float[8];
-	for (int i =0;i<8;++i){
-		v[i] = l.at(i).toFloat();
-	}
-	_keyboard->timbre(v);
+	_keyboard->timbre(_timbre->text());
 	_main->close();
 }
 

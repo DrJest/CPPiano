@@ -18,6 +18,7 @@ keyBoard::keyBoard(QWidget *parent)
   : QWidget(parent)
 {
   this->_parent = parent;
+  _timbre.reserve(8);
   _timbre[0]=1.;
   for(int i = 1; i<8; ++i)
     _timbre[i]=0.;
@@ -106,7 +107,7 @@ void keyBoard::stopNote(Key* note)
   note->stop();
 }
 
-float* keyBoard::timbre()
+QVector<double>  keyBoard::timbre()
 {
   return this->_timbre;
 }
@@ -121,9 +122,12 @@ QString keyBoard::getTimbre()
   return opt;
 }
 
-keyBoard* keyBoard::timbre(float* t)
+keyBoard* keyBoard::timbre(QString t)
 {
-  this->_timbre = t;
+  QStringList l = t.split("-");
+  for (int i =0;i<8;++i){
+    _timbre[i] = l.at(i).toFloat();
+  }
   return this;
 }
 
