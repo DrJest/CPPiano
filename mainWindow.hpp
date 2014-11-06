@@ -34,6 +34,8 @@
       int getToolbars();
       int getMenus();
 
+      RecPlay* rec;
+
       void closeEvent(QCloseEvent*);
 
     private:

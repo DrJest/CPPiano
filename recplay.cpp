@@ -1,12 +1,13 @@
 #include "recplay.hpp"
 #include "key.hpp"
 #include "keyboard.hpp"
+#include "mainWindow.hpp"
 #include <QFileDialog>
 #include <QMessageBox>
 
 RecPlay::RecPlay(QWidget* parent) 
 {
-	this->_kb = (keyBoard*)parent;
+	this->_mw = (mainWindow*)parent;
 }
 
 void RecPlay::setButtons(QAction* b1, QAction* b2, QAction* b3, QAction* b4, QAction* b5) 
@@ -24,7 +25,7 @@ void RecPlay::startRec()
 	if(!this->_registration.isEmpty() && !this->_paused && this->_unsavedChanges) 
 	{
 	  QMessageBox::StandardButton reply;
-	  reply = QMessageBox::question(this->_kb, "Test", "Unsaved recording will be deleted. Continue?",
+	  reply = QMessageBox::question(this->kb(), "Test", "Unsaved recording will be deleted. Continue?",
 	                                QMessageBox::Yes|QMessageBox::No);
 	  if (reply == QMessageBox::Yes) {
 	    this->_registration.clear();
@@ -52,7 +53,7 @@ void RecPlay::startRec()
 	this->_recording = true;
 	this->_unsavedChanges = true;
 	
-	_kb->updateTopBar();
+	kb()->updateTopBar();
 	
 	this->_timer = new QTimer();
 	connect(this->_timer, SIGNAL(timeout()), this, SLOT(PlayNextNote()));
@@ -69,7 +70,7 @@ void RecPlay::stopRec()
 	this->_stopPlay->setEnabled(false);
 	this->_paused = false;
 	this->_recording = false;
-	_kb->updateTopBar();
+	kb()->updateTopBar();
 }
 
 void RecPlay::Pause() 
@@ -89,7 +90,7 @@ void RecPlay::Pause()
 	else return;
 	this->_paused = true;
 	this->_pause->setEnabled(false);
-	_kb->updateTopBar();
+	kb()->updateTopBar();
 }
 
 void RecPlay::Play()
@@ -109,13 +110,13 @@ void RecPlay::Play()
 	this->_paused = false;
 	_timer->setInterval(1);
 	//this->_ms = 0;
-	_kb->updateTopBar();
+	kb()->updateTopBar();
 	_timer->start();
 }
 
 void RecPlay::Stop() 
 {
-	if(!this->_playing)
+	if(!this->_playing && !this->_paused)
 		return;
 	this->_startRec->setEnabled(true);
 	this->_stopRec->setEnabled(false);
@@ -132,7 +133,7 @@ void RecPlay::Stop()
 	this->_ms = 0;
 	QTextStream o(stdout);
 	o << "Stop Play\n";
-	_kb->updateTopBar();
+	kb()->updateTopBar();
 } 
 
 void RecPlay::PlayNextNote()
@@ -152,10 +153,15 @@ void RecPlay::PlayNextNote()
 	}
 }
 
+keyBoard* RecPlay::kb() {
+	return (keyBoard*)this->_mw->getMainWidget();
+}
+
+
 void RecPlay::Clear() {
 	stopRec();
 	Stop();
-	_kb->parent()->setWindowTitle("CPPiano");
+	kb()->parent()->setWindowTitle("CPPiano");
 	_registration.clear();
 }
 
@@ -180,9 +186,9 @@ void RecPlay::Open() {
 	{
 		QString line = in.readLine();
 		QStringList fields = line.split(" ");
-		Key* k = _kb->getNoteByName(fields[0]);
+		Key* k = kb()->getNoteByName(fields[0]);
 		if(!k->valid()) {
-			k = new Key(fields[0], _kb);
+			k = new Key(fields[0], kb());
 			k->setFrequency(fields[1].toDouble());
 		}
 		_registration.insert(fields[2].toInt(), qMakePair(k, fields[3].toInt()));
@@ -191,7 +197,7 @@ void RecPlay::Open() {
 	_currentFile = fileName;
 
 	QString fName = fileName.split("/").last();
-	_kb->parent()->setWindowTitle(fName + " - CPPiano");
+	kb()->parent()->setWindowTitle(fName + " - CPPiano");
 	_unsavedChanges = false;
 }
 
@@ -230,7 +236,7 @@ void RecPlay::writeFile(QString fileName)
 	QTextStream out(&file);
 
 	QString fName = fileName.split("/").last();
-	_kb->parent()->setWindowTitle(fName + " - CPPiano");
+	kb()->parent()->setWindowTitle(fName + " - CPPiano");
 
 	for (auto i : _registration.keys())
 	{

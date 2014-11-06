@@ -13,6 +13,7 @@
 
   class keyBoard;
   class Key;
+  class mainWindow;
 
   class RecPlay : public QObject
   {
@@ -28,6 +29,7 @@
       void setButtons(QAction*,QAction*,QAction*,QAction*,QAction*);
       void writeFile(QString);
       int status();
+      keyBoard* kb();
 
     public slots:
       void startRec();
@@ -55,7 +57,7 @@
       bool _playing = false;
       bool _paused = false;
       bool _unsavedChanges = false;
-      keyBoard* _kb;
+      mainWindow* _mw;
       QMap<int, QPair<Key*, int>> _registration;
       int _ms = 0;
       QTimer* _timer;

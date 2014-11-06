@@ -17,12 +17,17 @@
 keyBoard::keyBoard(QWidget *parent)
   : QWidget(parent)
 {
-  this->_rec = new RecPlay(this);
   this->_parent = parent;
   _timbre[0]=1.;
   for(int i = 1; i<8; ++i)
     _timbre[i]=0.;
 }
+
+RecPlay* keyBoard::rec() 
+{
+  return ((mainWindow*)_parent)->rec;
+}
+
 //Setta le dimensioni dei tasti alterati e puliti
 keyBoard* keyBoard::setCKeyHeight(int h)
 {
@@ -55,7 +60,7 @@ keyBoard* keyBoard::setKeyGeometry(int ch, int cw, int ah, int aw)
 keyBoard* keyBoard::updateTopBar()
 {
   QString status = "";
-  switch(_rec->status()) 
+  switch(rec()->status()) 
   {
     case 1:
       status = " - Recording";
@@ -341,14 +346,14 @@ void keyBoard::keyPressEvent(QKeyEvent *event)
 
   if(KC == 46) 
   {
-    switch(_rec->status()) 
+    switch(rec()->status()) 
     {
       case 1:
       case 4:
-        _rec->Pause();
+        rec()->Pause();
         break;
       default:
-        _rec->Play();
+        rec()->Play();
     }
     return;
   }

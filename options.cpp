@@ -152,7 +152,6 @@ void options::setLayout(QString layout)
 {
 	keyBoard* k = this->_keyboard = (keyBoard*) _mainwindow->getMainWidget();
 	keyBoard* n = this->_keyboard = new keyBoard(_mainwindow);
-
 	n->generate(k->getMinOct(), k->getMaxOct(), layout, k->getGeNote(), k->getGenFreq());
 	n->draw();
 	_mainwindow->setMainWidget<keyBoard*>(n);

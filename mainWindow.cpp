@@ -14,12 +14,13 @@ mainWindow::mainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     qApp->setStyleSheet("QPushButton:focus {outline: none}");
+    this->rec = new RecPlay(this);
 }
 
 
 void mainWindow::closeEvent ( QCloseEvent * event )
 {  
-    if(((keyBoard*)getMainWidget())->_rec->unsaved()) {
+    if(rec->unsaved()) {
         event->ignore();        
         if (QMessageBox::Yes == QMessageBox::question(this, "Close Confirmation?",
                               "Are you sure you want to exit?", 
@@ -35,7 +36,7 @@ void mainWindow::closeEvent ( QCloseEvent * event )
 mainWindow* mainWindow::defaultMenus()
 {
     options* opt = new options(this);
-    RecPlay * _rec = ((keyBoard*)getMainWidget())->_rec;
+    RecPlay* _rec = this->rec; //((keyBoard*)getMainWidget())->_rec;
     QTextStream out(stdout);
 
     QMenu* file = menuBar()->addMenu("&File");

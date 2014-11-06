@@ -66,7 +66,7 @@
         return this->_layout;
       }
 
-      RecPlay* _rec;
+      RecPlay* rec();
 
     public slots:
       void chOctEventUp();

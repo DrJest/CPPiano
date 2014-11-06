@@ -24,7 +24,7 @@ Key::Key(QString name, QWidget *parent)
 
   name = name.left(3);
   this->_parent = parent;
-  this->_rec = ((keyBoard*)parent)->_rec;
+  this->_rec = ((keyBoard*)parent)->rec();
   if(!name.contains(QRegExp("[a-g][0-7][#]{0,1}")) && name!="c8") 
   {
     QTextStream out(stdout);
