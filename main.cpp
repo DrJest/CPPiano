@@ -28,10 +28,10 @@ int main(int argc, char *argv[])
             case 'k':
                 layoutFile = QString::fromStdString(optarg);
                 break;
-            case 'l':
+            case 'b':
                 min =  atoi(optarg);
                 break;
-            case 'u':
+            case 't':
                 max = atoi(optarg);
                 break;
             case '?':
