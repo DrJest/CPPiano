@@ -239,7 +239,7 @@ keyBoard* keyBoard::draw()
   }
 
   int left = 0, top = 22;
-  QString last = "";
+  QVector<QString> last;
   bool checked = false;
   int c = 0;
     //Creo tastiera partendo dalle cNotes
@@ -253,7 +253,7 @@ keyBoard* keyBoard::draw()
       left += this->cKeyWidth;
       //se ho l'ultimo elemento della riga, metto il mio nome in  last
       if (checked==true) {
-        last = cNotes.value(i);
+        last.push_back(cNotes.value(i));
         checked = false;
       }
 
@@ -281,7 +281,7 @@ keyBoard* keyBoard::draw()
       //Se sono un do o un fa, aumento left di una larghezza dei tasti puliti
       if(aNotes.value(j).left(1) == "c" || aNotes.value(j).left(1) == "f") left += this->cKeyWidth;
       //Se sono l'ultima delle note pulite vado a capo anche con quelle alterate
-      if (aNotes.value(j).left(2) == last) {
+      if (last.contains(aNotes.value(j).left(2))) {
         left = this->cKeyWidth - ( this->aKeyWidth / 2 );
         top += this->cKeyHeight;
       }

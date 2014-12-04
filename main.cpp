@@ -30,9 +30,11 @@ int main(int argc, char *argv[])
                 break;
             case 'b':
                 min =  atoi(optarg);
+                min = qMin(1, min);
                 break;
             case 't':
                 max = atoi(optarg);
+                max = qMax(7, max);
                 break;
             case '?':
                 return 1;
