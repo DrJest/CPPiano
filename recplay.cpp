@@ -8,6 +8,8 @@
 RecPlay::RecPlay(QWidget* parent) 
 {
 	this->_mw = (mainWindow*)parent;
+	this->_timer = new QTimer();
+	connect(this->_timer, SIGNAL(timeout()), this, SLOT(PlayNextNote()));
 }
 
 void RecPlay::setButtons(QAction* b1, QAction* b2, QAction* b3, QAction* b4, QAction* b5) 
@@ -54,9 +56,6 @@ void RecPlay::startRec()
 	this->_unsavedChanges = true;
 	
 	kb()->updateTopBar();
-	
-	this->_timer = new QTimer();
-	connect(this->_timer, SIGNAL(timeout()), this, SLOT(PlayNextNote()));
 }
 
 void RecPlay::stopRec() 
@@ -156,7 +155,6 @@ void RecPlay::PlayNextNote()
 keyBoard* RecPlay::kb() {
 	return (keyBoard*)this->_mw->getMainWidget();
 }
-
 
 void RecPlay::Clear() {
 	stopRec();

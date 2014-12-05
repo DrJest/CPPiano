@@ -175,7 +175,13 @@ keyBoard* keyBoard::generate(int minO, int maxO, QString keyFile, QString genN, 
   //Setta un po di variabili
   this->_generatorNote = genN;
   this->_generatorFreq = genF;
+  if(minO>maxO)
+    minO = maxO-1;
   this->_curOctave = genN.mid(1,1).toInt();
+  if(_curOctave<minO)
+    _curOctave = minO;
+  if(_curOctave>maxO)
+    _curOctave = maxO;
   this->_minOctave = minO;
   this->_maxOctave = maxO;
   this->_generated = true;
@@ -356,8 +362,8 @@ QString keyBoard::Usage()
     h  Prints help usage\n \
     v  Prints version informations\n \
     k  Loads a layout file for keyboard\n \
-    l  Lower Octave [1-7]\n \
-    u  Upper Octave [1-7]\n \
+    b  Lower Octave [1-7]\n \
+    t  Upper Octave [1-7]\n \
     \n \
 GUI\n \
     [1-9a-z] map keyboard\n \

@@ -3,6 +3,7 @@
 #include "keyboard.hpp"
 #include <QFileDialog>
 #include <QShortcut>
+#include <QComboBox>
 
 options::options(QWidget* mw)
 {
@@ -60,17 +61,36 @@ void options::spawnOptionsWindow()
     layoutL->addWidget(cusFieldBox);
    	cusFieldBox->hide();
 
+
+    if(_layout=="assets/default.keys")
+        def->setChecked(true);
+    else if (_layout=="assets/complete.keys")
+        com->setChecked(true);
+    else {
+        cus->setChecked(true);
+        cusFieldBox->show();
+    }
+
+    layoutL->addWidget(new QLabel("Ottava Minima"));
+    QComboBox* minOct = new QComboBox(layoutTab);
+    for(int i=1; i<8;++i)
+        minOct->addItem(QString::number(i));
+    minOctave = _keyboard->getMinOct();
+    minOct->setCurrentIndex(_keyboard->getMinOct()-1);
+    connect(minOct, SIGNAL(currentIndexChanged(int)), this, SLOT(setMinOctave(int)));
+    layoutL->addWidget(minOct);
+
+    layoutL->addWidget(new QLabel("Ottava Massima"));
+    QComboBox* maxOct = new QComboBox(layoutTab);
+    for(int i=1; i<8;++i)
+        maxOct->addItem(QString::number(i));
+    maxOctave = _keyboard->getMaxOct();
+    maxOct->setCurrentIndex(_keyboard->getMaxOct()-1);
+    connect(maxOct, SIGNAL(currentIndexChanged(int)), this, SLOT(setMaxOctave(int)));
+    layoutL->addWidget(maxOct);
+
     // needed to reset stretch
    	layoutL->addWidget(new QLabel(""));
-
-	if(_layout=="assets/default.keys")
-		def->setChecked(true);
-	else if (_layout=="assets/complete.keys")
-		com->setChecked(true);
-	else {
-		cus->setChecked(true);
-		cusFieldBox->show();
-	}
 
     layoutTab->setLayout(layoutL);
     /*** END LAYOUT TAB ***/
@@ -89,6 +109,7 @@ void options::spawnOptionsWindow()
     timbreL->addWidget(timbreLabel);
     timbreL->addWidget(timbre);
     timbreL->addWidget(timbrExplication);
+    //impedisce agli altri widget di espandersi per riempire il genitore
     timbreL->addStretch();
 
     timbreTab->setLayout(timbreL);
@@ -103,8 +124,6 @@ void options::spawnOptionsWindow()
     helpTab->setLayout(helpL);
     /*** END HELP TAB ***/
 
-
-
     // OK BUTTON
     QPushButton* ok = new QPushButton("OK", wdg);
     optionsL->addWidget(ok,2,2);
@@ -118,6 +137,14 @@ void options::spawnOptionsWindow()
 
     wdg->setLayout(optionsL);
 	wdg->show();
+}
+
+void options::setMinOctave(int currentindex) {
+    this->minOctave = currentindex+1;
+}
+
+void options::setMaxOctave(int currentindex) {
+    this->maxOctave = currentindex+1;
 }
 
 void options::toggleLayoutCustomField(bool checked) {
@@ -149,7 +176,7 @@ void options::setLayout(QString layout)
 {
 	keyBoard* k = this->_keyboard = (keyBoard*) _mainwindow->getMainWidget();
 	keyBoard* n = this->_keyboard = new keyBoard(_mainwindow);
-	n->generate(k->getMinOct(), k->getMaxOct(), layout, k->getGeNote(), k->getGenFreq());
+	n->generate(minOctave, maxOctave, layout, k->getGeNote(), k->getGenFreq());
 	n->draw();
 	_mainwindow->setMainWidget<keyBoard*>(n);
 	_mainwindow->setCentralWidget(n);

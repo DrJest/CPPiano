@@ -37,6 +37,8 @@
       void cusBrowse();
       void setDefaultLayout(bool);
       void setCompleteLayout(bool);
+      void setMinOctave(int);
+      void setMaxOctave(int);
 
     private:
       mainWindow* _mainwindow;
@@ -44,6 +46,8 @@
       QWidget* _cusLayoutFieldBox;
       QWidget* _main;
       QLineEdit* _timbre;
+      int minOctave;
+      int maxOctave;
 
       //a field for each option
       QString _layout;

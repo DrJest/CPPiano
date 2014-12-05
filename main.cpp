@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     while ( (opt = getopt(argc, argv, "hvk:b:t:")) != -1 ) {  
         switch ( opt ) {
             case 'v':
-                std::cout << "CPPiano v1.02 - Licensed under GNU/LGPL v3.0" << std::endl;
+                std::cout << "CPPiano v1.05 - Licensed under GNU/LGPL v3.0" << std::endl;
                 return 0;
                 break;
             case 'h':
